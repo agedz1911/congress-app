@@ -12,6 +12,13 @@ class ListOrders extends ListRecords
 {
     protected static string $resource = OrderResource::class;
 
+
+    public function getHeading(): string
+    {
+        return __('Registration');
+    }
+
+
     protected function getHeaderActions(): array
     {
         return [
@@ -30,11 +37,10 @@ class ListOrders extends ListRecords
     {
         return [
             null => Tab::make('All'),
-            'new' => Tab::make()->query(fn ($query) => $query->where('status', 'new')),
-            'processing' => Tab::make()->query(fn ($query) => $query->where('status', 'Processing')),
-            'validated' => Tab::make()->query(fn ($query) => $query->where('status', 'Validated')),
-            // 'delivered' => Tab::make()->query(fn ($query) => $query->where('status', 'delivered')),
-            'cancelled' => Tab::make()->query(fn ($query) => $query->where('status', 'cancelled')),
+            'new' => Tab::make()->query(fn($query) => $query->where('status', 'new')),
+            'processing' => Tab::make()->query(fn($query) => $query->where('status', 'Processing')),
+            'validated' => Tab::make()->query(fn($query) => $query->where('status', 'Validated')),
+            'cancelled' => Tab::make()->query(fn($query) => $query->where('status', 'cancelled')),
         ];
     }
 }

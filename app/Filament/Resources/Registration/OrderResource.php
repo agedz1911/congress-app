@@ -45,6 +45,7 @@ class OrderResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
+    
     protected static ?string $navigationGroup = 'Registration';
     protected static ?string $navigationLabel = 'Registration Orders';
     public static function form(Form $form): Form
@@ -75,9 +76,18 @@ class OrderResource extends Resource
                     ->sortable(),
                 TextColumn::make('participant')
                     ->label('Full Name')
-                    ->getStateUsing(fn($record) => $record->participant->first_name . ' ' . $record->participant->last_name)
-                    ->sortable()
-                    ->searchable(['participant.first_name', 'participant.last_name']),
+                    ->state(fn($record) => $record->participant->first_name . ' ' . $record->participant->last_name)
+                    ->searchable(query: function ($query, $search) {
+                        $query->whereHas('participant', function ($q) use ($search) {
+                            $q->where('first_name', 'like', "%{$search}%")
+                                ->orWhere('last_name', 'like', "%{$search}%");
+                        });
+                    })
+                    ->sortable(query: function ($query, string $direction) {
+                        $query->join('participants', 'participants.id', '=', 'orders.participant_id')
+                            ->orderByRaw("CONCAT(participants.first_name, ' ', participants.last_name) {$direction}")
+                            ->select('orders.*');
+                    }),
                 TextColumn::make('participant.country')
                     ->label('Country')
                     ->sortable()
@@ -138,6 +148,18 @@ class OrderResource extends Resource
                     ->label('Paid Amount')
                     ->numeric(decimalPlaces: 0)
                     ->sortable(),
+                TextColumn::make('transaction.kurs')
+                    ->label('Total Kurs')
+                    ->numeric(decimalPlaces: 0)
+                    ->sortable(),
+                TextColumn::make('created_at')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true),
+                TextColumn::make('updated_at')
+                    ->date()
+                    ->sortable()
+                    ->toggleable(isToggledHiddenByDefault: true)
             ])
             ->filters([
                 Tables\Filters\TrashedFilter::make(),

@@ -7,6 +7,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\RegStatus;
 use App\Filament\Resources\Registration\OrderResource;
 use App\Filament\Resources\Registration\OrderResource\Schemas\Pricing;
+use App\Models\Currency;
 use App\Models\Registration\Order;
 use App\Models\Registration\Participant;
 use App\Models\Registration\Product;
@@ -77,7 +78,7 @@ class RegistrationEdit extends Page
         $grandTotal = max(0, $subtotal - $discount);
 
         $this->data['total'] = $grandTotal;
-        // $this->data['amount'] = $grandTotal;
+        $this->data['amount'] = $grandTotal;
     }
 
     public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
@@ -256,6 +257,25 @@ class RegistrationEdit extends Page
                 'payment_date' => $data['payment_date'] ?? null,
                 'attachment' => $data['attachment'] ?? null,
             ];
+
+            // Calculate kurs based on participant country and currency table
+            $participant = Participant::find($data['participant_id']);
+            $total = $this->data['total'] ?? 0;
+            $kursValue = 1;
+
+            if ($participant) {
+                if (strtolower($participant->country) === 'indonesia') {
+                    $currency = Currency::where('region', 'indonesia')->first();
+                } else {
+                    $currency = Currency::where('region', 'united states')->first();
+                }
+                if ($currency) {
+                    $kursValue = $currency->kurs;
+                }
+            }
+
+            $calculatedKurs = $total * $kursValue;
+            $transactionData['kurs'] = $calculatedKurs;
 
             // Separate regItems data
             $regItemsData = $data['items'] ?? [];

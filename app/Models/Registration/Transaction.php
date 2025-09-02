@@ -17,7 +17,8 @@ class Transaction extends Model
         'payment_date',
         'payment_status',
         'amount',
-        'attachment'
+        'attachment',
+        'kurs'
     ];
 
     public function order(): BelongsTo

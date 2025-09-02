@@ -7,6 +7,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\RegStatus;
 use App\Filament\Resources\Registration\OrderResource;
 use App\Filament\Resources\Registration\OrderResource\Schemas\Pricing;
+use App\Models\Currency;
 use App\Models\Registration\Order;
 use App\Models\Registration\OrderItem;
 use App\Models\Registration\Participant;
@@ -271,6 +272,24 @@ class Registration extends Page
 
             // Create registration transaction
             if (isset($data['payment_method']) && isset($data['payment_status'])) {
+            // Calculate kurs based on participant country and currency table
+            $participant = Participant::find($data['participant_id']);
+            $total = $this->data['total'] ?? 0;
+            $kursValue = 1;
+
+            if ($participant) {
+                if (strtolower($participant->country) === 'indonesia') {
+                    $currency = Currency::where('region', 'indonesia')->first();
+                } else {
+                    $currency = Currency::where('region', 'united states')->first();
+                }
+                if ($currency) {
+                    $kursValue = $currency->kurs;
+                }
+            }
+
+            $calculatedKurs = $total * $kursValue;
+
                 Transaction::create([
                     'order_id' => $registrationOrder->id,
                     'payment_method' => $data['payment_method'],
@@ -278,6 +297,7 @@ class Registration extends Page
                     'payment_status' => $data['payment_status'],
                     'amount' => $this->data['amount'],
                     'attachment' => $data['attachment'] ? (is_array($data['attachment']) ? $data['attachment'][0] : $data['attachment']) : null,
+                    'kurs' => $calculatedKurs,
                 ]);
             }
 

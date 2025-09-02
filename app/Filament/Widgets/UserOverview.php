@@ -2,6 +2,7 @@
 
 namespace App\Filament\Widgets;
 
+use App\Models\Registration\Order;
 use App\Models\Registration\Participant;
 use App\Models\User;
 use Filament\Support\Enums\IconPosition;
@@ -45,6 +46,15 @@ class UserOverview extends BaseWidget
         $newParticipantToday = Participant::whereDate('created_at', today())->count();
         $changeParticipant = "{$newParticipantToday} new participants today";
 
+        $orders = [];
+        for ($i = 6; $i >= 0; $i--) {
+            $date = now()->subDays($i)->format('Y-m-d');
+            $orders[] = Order::whereDate('created_at', $date)->count();
+        }
+
+        $newOrdersToday = Order::whereDate('created_at', today())->count();
+        $changeOrder = "{$newOrdersToday} new orders today";
+
         return [
             Stat::make('Total Users', User::count())
                 ->description($changeDescription)
@@ -55,7 +65,12 @@ class UserOverview extends BaseWidget
                 ->description($changeParticipant)
                 ->descriptionIcon('heroicon-o-user-group', IconPosition::Before)
                 ->chart($chartParticipant)
-                ->color('info')
+                ->color('info'),
+            Stat::make('Total Orders', Order::count())
+                ->description($changeOrder)
+                ->descriptionIcon('heroicon-o-user-group', IconPosition::Before)
+                ->chart($orders)
+                ->color('danger'),
         ];
     }
 }
