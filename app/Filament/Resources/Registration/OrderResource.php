@@ -44,8 +44,8 @@ class OrderResource extends Resource
 {
     protected static ?string $model = Order::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-tag';
-    
+    protected static ?string $navigationIcon = 'heroicon-o-document-text';
+
     protected static ?string $navigationGroup = 'Registration';
     protected static ?string $navigationLabel = 'Registration Orders';
     public static function form(Form $form): Form
@@ -114,6 +114,9 @@ class OrderResource extends Resource
                     ->label('Qty'),
                 TextColumn::make('items.unit_price')
                     ->label('Unit Price')
+                    ->numeric(decimalPlaces: 0),
+                TextColumn::make('coupon'),
+                TextColumn::make('discount')
                     ->numeric(decimalPlaces: 0),
                 TextColumn::make('total')
                     ->numeric(decimalPlaces: 0),

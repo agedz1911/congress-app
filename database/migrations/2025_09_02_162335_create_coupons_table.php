@@ -15,6 +15,11 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->decimal('nominal', 8, 2);
+            $table->enum('type', ['flat', 'percent'])->default('flat');
+            $table->date('starts_at')->nullable();
+            $table->date('ends_at')->nullable();
+            $table->unsignedInteger('quota')->nullable();
+            $table->unsignedInteger('used_count')->nullable();
             $table->boolean('is_active');
             $table->softDeletes();
             $table->timestamps();

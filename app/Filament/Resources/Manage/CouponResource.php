@@ -19,7 +19,7 @@ class CouponResource extends Resource
     protected static ?string $model = Coupon::class;
     protected static ?string $navigationGroup = 'Manage';
     protected static ?int $navigationSort = 3;
-    protected static ?string $navigationIcon = 'heroicon-o-slash';
+    protected static ?string $navigationIcon = 'heroicon-o-percent-badge';
 
     public static function form(Form $form): Form
     {
@@ -31,6 +31,25 @@ class CouponResource extends Resource
                 Forms\Components\TextInput::make('nominal')
                     ->required()
                     ->numeric(),
+                Forms\Components\Select::make('type')
+                    ->options([
+                        'flat' => 'Flat',
+                        'percent' => 'Percent',
+                    ])
+                    ->default('flat')
+                    ->required(),
+                Forms\Components\DatePicker::make('starts_at')
+                    ->label('Starts At'),
+                Forms\Components\DatePicker::make('ends_at')
+                    ->label('Ends At'),
+                Forms\Components\TextInput::make('quota')
+                    ->numeric()
+                    ->label('Quota (leave empty or 0 for unlimited)')
+                    ->helperText('Kosongkan atau isi 0 untuk unlimited'),
+                Forms\Components\TextInput::make('used_count')
+                    ->numeric()
+                    ->default(0)
+                    ->label('Used Count'),
                 Forms\Components\Toggle::make('is_active')
                     ->default(true)
                     ->required(),
@@ -46,6 +65,9 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('nominal')
                     ->numeric(decimalPlaces: 2)
                     ->sortable(),
+                Tables\Columns\TextColumn::make('type'),
+                Tables\Columns\TextColumn::make('quota'),
+                Tables\Columns\TextColumn::make('used_count'),
                 ToggleColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()

@@ -8,6 +8,7 @@ use App\Enums\RegStatus;
 use App\Filament\Resources\Registration\OrderResource;
 use App\Filament\Resources\Registration\OrderResource\Schemas\Pricing;
 use App\Models\Currency;
+use App\Models\Manage\Coupon;
 use App\Models\Registration\Order;
 use App\Models\Registration\Participant;
 use App\Models\Registration\Product;
@@ -75,6 +76,7 @@ class RegistrationEdit extends Page
         }
 
         $discount = $this->data['discount'] ?? 0;
+        $discount = min(max(0, $discount), $subtotal);
         $grandTotal = max(0, $subtotal - $discount);
 
         $this->data['total'] = $grandTotal;
@@ -172,10 +174,83 @@ class RegistrationEdit extends Page
                     Step::make('Summary')
                         ->schema([
                             TextInput::make('coupon')
-                                ->label('Coupon Code'),
+                                ->label('Coupon Code')
+                                ->reactive()
+                                ->debounce(1000)
+                                ->afterStateUpdated(function (callable $set, callable $get, $livewire, ?string $state) {
+                                    $set('discount', 0);
+                                    $items = $get('items') ?? [];
+                                    $subtotal = 0.0;
+                                    foreach ($items as $item) {
+                                        $subtotal += (float) ($item['unit_price'] ?? 0);
+                                    }
+
+                                    if (blank($state)) {
+                                        Notification::make()
+                                            ->title('Coupon cleared')
+                                            ->body('Kupon dihapus. Diskon direset ke 0.')
+                                            ->info()
+                                            ->duration(2000)
+                                            ->send();
+                                        $livewire->calculateGrandTotal();
+                                        return;
+                                    }
+
+                                    $coupon = Coupon::where('name', $state)->first();
+                                    if (!$coupon) {
+                                        Notification::make()
+                                            ->title('Coupon tidak ditemukan')
+                                            ->body('Kode kupon tidak valid.')
+                                            ->danger()
+                                            ->send();
+                                        $livewire->calculateGrandTotal();
+                                        return;
+                                    }
+
+                                    if (!$coupon->isCurrentlyActive()) {
+                                        Notification::make()
+                                            ->title('Coupon tidak aktif')
+                                            ->body('Kupon belum aktif, sudah berakhir, atau dinonaktifkan.')
+                                            ->warning()
+                                            ->send();
+                                        $livewire->calculateGrandTotal();
+                                        return;
+                                    }
+
+                                    if (!$coupon->isQuotaAvailable()) {
+                                        Notification::make()
+                                            ->title('Kuota kupon habis')
+                                            ->body('Kuota penggunaan kupon ini telah habis.')
+                                            ->danger()
+                                            ->send();
+                                        $livewire->calculateGrandTotal();
+                                        return;
+                                    }
+
+                                    $discount = $coupon->computeDiscountForSubtotal($subtotal);
+                                    $set('discount', $discount);
+
+                                    $quotaInfo = is_null($coupon->remainingQuota())
+                                        ? 'Kuota: unlimited'
+                                        : 'Sisa kuota: ' . $coupon->remainingQuota();
+
+                                    $label = $coupon->type === 'percent'
+                                        ? 'Diskon ' . rtrim(rtrim(number_format($coupon->nominal, 2), '0'), '.') . '% diterapkan.'
+                                        : 'Diskon Rp ' . number_format($coupon->nominal, 2) . ' diterapkan.';
+
+                                    Notification::make()
+                                        ->title('Coupon diterapkan')
+                                        ->body($label . ' ' . $quotaInfo)
+                                        ->success()
+                                        ->send();
+
+                                    $livewire->calculateGrandTotal();
+                                }),
                             TextInput::make('discount')
                                 ->label('Discount Amount')
                                 ->numeric()
+                                ->disabled()
+                                ->dehydrated()
                                 ->reactive()
                                 ->afterStateUpdated(function ($livewire) {
                                     $livewire->calculateGrandTotal();
