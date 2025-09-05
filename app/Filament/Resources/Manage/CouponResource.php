@@ -68,6 +68,10 @@ class CouponResource extends Resource
                 Tables\Columns\TextColumn::make('type'),
                 Tables\Columns\TextColumn::make('quota'),
                 Tables\Columns\TextColumn::make('used_count'),
+                Tables\Columns\TextColumn::make('starts_at')
+                    ->date(),
+                Tables\Columns\TextColumn::make('ends_at')
+                    ->date(),
                 ToggleColumn::make('is_active'),
                 Tables\Columns\TextColumn::make('deleted_at')
                     ->dateTime()
