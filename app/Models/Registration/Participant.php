@@ -37,6 +37,11 @@ class Participant extends Model
         'participant_type' => 'array',
     ];
 
+    public function scopeSearch($query, $value)
+    {
+        $query->where('first_name', 'like', "%{$value}%");
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);

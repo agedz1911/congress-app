@@ -26,6 +26,11 @@ class Hotel extends Model
         'galleries' => 'array',
     ];
 
+    public function scopeSearch($query, $value)
+    {
+        $query->where('name', 'like', "%{$value}%");
+    }
+
     public function rooms(): HasMany
     {
         return $this->hasMany(HotelRoom::class);

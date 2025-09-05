@@ -108,7 +108,6 @@ class Registration extends Page
                                                 ->label('Product')
                                                 ->options(fn() => Product::query()
                                                     ->where('is_active', true)
-                                                    ->orderBy('name')
                                                     ->pluck('name', 'id'))
                                                 ->reactive()
                                                 ->searchable()

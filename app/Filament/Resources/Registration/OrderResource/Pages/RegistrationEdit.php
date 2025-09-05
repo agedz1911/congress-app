@@ -22,6 +22,7 @@ use Filament\Forms\Components\ToggleButtons;
 use Filament\Forms\Components\Wizard;
 use Filament\Forms\Components\Wizard\Step;
 use Filament\Forms\Concerns\InteractsWithForms;
+use Filament\Forms\Form;
 use Filament\Notifications\Notification;
 use Filament\Resources\Pages\Page;
 use Illuminate\Support\Facades\Blade;
@@ -83,7 +84,7 @@ class RegistrationEdit extends Page
         $this->data['amount'] = $grandTotal;
     }
 
-    public function form(\Filament\Forms\Form $form): \Filament\Forms\Form
+    public function form(Form $form): Form
     {
         return $form
             ->schema([

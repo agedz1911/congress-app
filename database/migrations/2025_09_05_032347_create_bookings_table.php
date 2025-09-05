@@ -22,8 +22,10 @@ return new class extends Migration
             $table->unsignedInteger('total_night');
             $table->string('coupon')->nullable();
             $table->unsignedBigInteger('discount')->nullable();
+            $table->unsignedBigInteger('subtotal');
             $table->unsignedBigInteger('total');
             $table->string('status');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

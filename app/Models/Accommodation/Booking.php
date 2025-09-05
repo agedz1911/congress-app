@@ -21,9 +21,15 @@ class Booking extends Model
         'total_night',
         'coupon',
         'discount',
+        'subtotal',
         'total',
         'status'
     ];
+
+    public function scopeSearch($query, $value)
+    {
+        $query->where(['hotel_id'], 'like', "%{$value}%");
+    }
 
     public function hotel()
     {
