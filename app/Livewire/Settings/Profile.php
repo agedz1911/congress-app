@@ -3,6 +3,7 @@
 namespace App\Livewire\Settings;
 
 use App\Models\User;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Validation\Rule;
@@ -11,16 +12,21 @@ use Livewire\Component;
 class Profile extends Component
 {
     public string $name = '';
-
+    public string $last_name = '';
+    public string $country = '';
     public string $email = '';
-
+    public $countries;
     /**
      * Mount the component.
      */
     public function mount(): void
     {
         $this->name = Auth::user()->name;
+        $this->last_name = Auth::user()->last_name;
+        $this->country = Auth::user()->country;
         $this->email = Auth::user()->email;
+
+        $this->countries = countries();
     }
 
     /**
@@ -32,6 +38,8 @@ class Profile extends Component
 
         $validated = $this->validate([
             'name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'country' => ['required', 'string', 'max:255'],
 
             'email' => [
                 'required',
@@ -50,6 +58,11 @@ class Profile extends Component
         }
 
         $user->save();
+
+        Notification::make()
+            ->title('User Updated')
+            ->success()
+            ->send();
 
         $this->dispatch('profile-updated', name: $user->name);
     }

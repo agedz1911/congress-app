@@ -8,13 +8,21 @@
         <!-- Name -->
         <flux:input
             wire:model="name"
-            :label="__('Name')"
+            :label="__('First Name')"
             type="text"
             required
             autofocus
             autocomplete="name"
-            :placeholder="__('Full name')"
-        />
+            :placeholder="__('First name')" />
+
+        <flux:input
+            wire:model="last_name"
+            :label="__('Last Name')"
+            type="text"
+            required
+            autofocus
+            autocomplete="last_name"
+            :placeholder="__('last name')" />
 
         <!-- Email Address -->
         <flux:input
@@ -23,8 +31,16 @@
             type="email"
             required
             autocomplete="email"
-            placeholder="email@example.com"
-        />
+            placeholder="email@example.com" />
+
+        <flux:select
+            :label="__('Country')"
+            wire:model="country"
+            placeholder="Choose Country...">
+            @foreach ($countries as $country)
+            <flux:select.option>{{$country['name']}}</flux:select.option>
+            @endforeach
+        </flux:select>
 
         <!-- Password -->
         <flux:input
@@ -34,8 +50,7 @@
             required
             autocomplete="new-password"
             :placeholder="__('Password')"
-            viewable
-        />
+            viewable />
 
         <!-- Confirm Password -->
         <flux:input
@@ -45,8 +60,7 @@
             required
             autocomplete="new-password"
             :placeholder="__('Confirm password')"
-            viewable
-        />
+            viewable />
 
         <div class="flex items-center justify-end">
             <flux:button type="submit" variant="primary" class="w-full">
