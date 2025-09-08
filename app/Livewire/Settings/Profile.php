@@ -22,8 +22,8 @@ class Profile extends Component
     public function mount(): void
     {
         $this->name = Auth::user()->name;
-        $this->last_name = Auth::user()->last_name;
-        $this->country = Auth::user()->country;
+        $this->last_name = Auth::user()->last_name ?? '';
+        $this->country = Auth::user()->country ?? '';
         $this->email = Auth::user()->email;
 
         $this->countries = countries();
