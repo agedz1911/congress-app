@@ -1,0 +1,54 @@
+/* ----------------------------------------------------------------
+	Custom CSS
+
+	Add all your Custom Styled CSS here for New Styles or
+	Overwriting Default Theme Styles for Better Handling Updates
+-----------------------------------------------------------------*/
+body {
+    font-family: "Poppins", sans-serif;
+}
+
+.banner {
+    background-image: url(../images/bg.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center top;
+}
+
+.breadcrumbs {
+    background-image: url(../images/brecumb.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: left top;
+}
+
+.inner-banner {
+    padding-top: 150px;
+}
+
+.bg-competition {
+    background-image: url(../images/4.png);
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-position: center;
+}
+
+.feature {
+    background-image: url(../images/6-n.png);
+    background-size: cover;
+    background-position: top center;
+}
+
+.splash {
+    background-image: url(../images/splash.png);
+    background-size: cover;
+    background-position: left top;
+    background-repeat: repeat-x;
+}
+
+.image-welcome {
+    background-image: url(../images/3-.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}

@@ -1,0 +1,41 @@
+@if (Route::has('login'))
+@auth
+<div class="dropdown dropdown-end">
+    <div tabindex="0" role="button" class="btn btn-ghost btn-circle avatar">
+        <div class="w-10 rounded-full">
+            <img alt="Profile"
+                src="https://ui-avatars.com/api/?name={{ Auth::user()->name}}+{{ Auth::user()->last_name}}" />
+        </div>
+    </div>
+    <ul tabindex="0" class="menu menu-sm dropdown-content bg-base-100 rounded-box z-1 mt-3 w-52 p-2 shadow">
+        <li>
+            <a wire:navigate href="{{route('settings.profile')}}" class="justify-between">
+                Profile
+                <span class="badge">New</span>
+            </a>
+        </li>
+        <li>
+            <a href="{{route('dashboard')}}" wire:navigate>Dashboard</a>
+        </li>
+
+        <form class="w-full" action="{{route('logout')}}" method="POST">
+            @csrf
+            <button type="submit" class="w-full btn btn-ghost btn-xs mr-2 hover:cursor-pointer" href="{{route('logout')}}"> Logout <i class="fa-solid fa-right-from-bracket"></i></button>
+        </form>
+
+    </ul>
+</div>
+@else
+<a href="{{ route('login') }}"
+    class=" hidden lg:block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal">
+    Log in
+</a>
+
+@if (Route::has('register'))
+<a href="{{ route('register') }}"
+    class=" hidden lg:block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+    Register
+</a>
+@endif
+@endauth
+@endif
