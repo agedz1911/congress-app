@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="assets/css/custom.css">
 
     <!--FontAwesome CSS-->
-    {{-- <script src="https://kit.fontawesome.com/6d07745da9.js" crossorigin="anonymous"></script> --}}
+    <script src="https://kit.fontawesome.com/6d07745da9.js" crossorigin="anonymous"></script>
 
     @vite('resources/css/app.css')
     {{-- @fluxAppearance --}}

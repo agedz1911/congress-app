@@ -12,11 +12,21 @@ use Livewire\Component;
 #[Title('Registration - BURN 2025')]
 class Registration extends Component
 {
-    public $categories;
+    public $products;
+    public $symposiums;
+    public $workshops;
 
     public function mount()
     {
-        $this->categories = Product::with(['regtype'])->get();
+        $this->products = Product::with(['regtype.regcategory'])->get();
+
+        $this->symposiums = $this->products->filter(function ($product) {
+            return optional($product->regtype)->regcategory->title === 'Symposium';
+        });
+
+        $this->workshops = $this->products->filter(function ($product) {
+            return optional($product->regtype)->regcategory->title === 'Workshop';
+        });
     }
     public function render()
     {
