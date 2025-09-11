@@ -177,13 +177,13 @@
         @else
         <div class="flex">
             <a href="{{ route('login') }}"
-                class=" lg:hidden block px-5 py-1.5 dark:text-[#EDEDEC] text-[#1b1b18] border border-transparent hover:border-[#19140035] dark:hover:border-[#3E3E3A] rounded-sm text-sm leading-normal">
-                Log in
+                class="hidden lg:block px-5 py-1.5 dark:text-[#EDEDEC] text-warning border border-transparent hover:border-warning dark:hover:border-amber-700 rounded-md text-sm leading-normal">
+                Login
             </a>
 
             @if (Route::has('register'))
             <a href="{{ route('register') }}"
-                class=" lg:hidden block px-5 py-1.5 dark:text-[#EDEDEC] border-[#19140035] hover:border-[#1915014a] border text-[#1b1b18] dark:border-[#3E3E3A] dark:hover:border-[#62605b] rounded-sm text-sm leading-normal">
+                class="hidden lg:block px-5 py-1.5 dark:text-[#EDEDEC] border-warning hover:border-amber-100 border text-warning dark:border-amber-700 dark:hover:border-[#62605b] rounded-md text-sm leading-normal">
                 Register
             </a>
         </div>

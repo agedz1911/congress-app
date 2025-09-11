@@ -15,7 +15,7 @@
                     <x-navigation.trolley class="hidden lg:block dropdown-end" />
                     <div class="flex-none lg:hidden">
                         <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
-                            <i class="fa fa-bars text-2xl"></i>
+                            <i class="fa fa-bars text-warning dark:text-slate-50 text-2xl"></i>
                         </label>
                     </div>
                     <x-navigation.avatar />
