@@ -8,19 +8,22 @@
 
     <div class="justify-center flex mt-5 lg:mt-10">
         <ul class="steps w-full steps-vertical lg:steps-horizontal">
-            <li class="step step-primary">Order Summary</li>
-            <li class="step">Detail Participant</li>
-            <li class="step">Payment Method</li>
-            <li class="step">Review & Order</li>
+            <li class="step {{$step >= 1 ? 'step-primary' : '' }}">Order Summary</li>
+            <li class="step {{$step >= 2 ? 'step-primary' : '' }}">Detail Participant</li>
+            <li class="step {{$step >= 3 ? 'step-primary' : '' }}">Payment Method</li>
+            <li class="step {{$step >= 4 ? 'step-primary' : '' }}">Review & Order</li>
         </ul>
     </div>
+    @if ($step == 1)
+
+
     <section class="py-5 lg:py-10">
         <div class="flex flex-col lg:flex-row justify-between px-5 lg:px-10 py-5 lg:py-10">
 
             <div class="overflow-x-auto w-full max-w-4xl rounded-2xl ">
                 <table class="table">
                     <!-- head -->
-                    <thead class="bg-slate-200">
+                    <thead class=" bg-slate-200 dark:bg-yellow-200">
                         <tr>
                             <th style="width: 40%;">Category Product</th>
                             <th>Price</th>
@@ -67,7 +70,9 @@
 
                     </tbody>
                 </table>
-                <button class="btn btn-error rounded-lg mt-4"><i class="fa fa-angles-left text-xs"></i> Back to Product Registration</button>
+                <button wire:click='backToRegistration' class="btn btn-error rounded-lg mt-4"><i
+                        class="fa fa-angles-left text-xs"></i> Back to Product
+                    Registration</button>
             </div>
 
             <div>
@@ -99,50 +104,263 @@
                         </div>
                         <p></p>
                         <div class="justify-end card-actions">
-                            <button class="btn btn-primary btn-block">Continue to Payment Method <i class="fa fa-angles-right text-xs"></i></button>
+                            <button wire:click="continueToParticipant" class="btn btn-primary btn-block">Continue to
+                                detail participant <i class="fa fa-angles-right text-xs"></i></button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
+    @endif
+
+    @if ($step == 2)
+
 
     <section class="p-5 lg:p-10">
         <div class="card w-full bg-base-100 shadow-sm">
             <div class="card-body">
-                <span class="badge badge-xs badge-warning">Details</span>
+                <span class="badge badge-xs badge-warning">Participants</span>
                 <div class="w-full flex justify-between flex-col lg:flex-row py-5">
                     <div class="form-control w-full">
-                        <label class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
-                            <input type="radio" name="radio-4" class="radio radio-primary" checked="checked" />
-                            <span>Register for my Self <i class="fa fa-credit-card"></i></span>
+                        <label
+                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
+                            <input type="radio" name="radio-4" class="radio radio-primary" />
+                            <span><i class="fa fa-user"></i> Register for my Self </span>
                         </label>
                     </div>
                     <div class="form-control w-full">
-                        <label class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
+                        <label
+                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
                             <input type="radio" name="radio-4" class="radio radio-primary" />
-                            <span>Register for others person <i class="fa fa-money-bill-transfer"></i></span>
+                            <span><i class="fa fa-users"></i> Register for others person </span>
                         </label>
                     </div>
                 </div>
-                <div class="mt-6">
-                    
+                <div
+                    class="bg-gray-100 border-base-300 rounded-box rounded-lg border p-4 grid grid-cols-1 lg:grid-cols-2">
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">First Name</legend>
+                        <input type="text" class="input" placeholder="John" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Last Name</legend>
+                        <input type="text" class="input" placeholder="Doe" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">NIK</legend>
+                        <input type="number" class="input" placeholder="2353 2543 5435 6445" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Title</legend>
+                        <select class="select">
+                            <option disabled selected>Choose Option</option>
+                            <option>Prof.</option>
+                            <option>MD</option>
+                            <option>Mr</option>
+                            <option>Ms</option>
+                            <option>Miss</option>
+                        </select>
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Title specialist</legend>
+                        <input type="text" class="input" placeholder="SpU, SpBP, SpBS" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Speciality</legend>
+                        <select class="select">
+                            <option disabled selected>Select Option</option>
+                            <option>Specialist</option>
+                            <option>Resident</option>
+                            <option>General Practitioner</option>
+                            <option>Medical Student</option>
+
+                        </select>
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Name on certificate</legend>
+                        <input type="text" class="input" placeholder="John Doe, SpU" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Institution</legend>
+                        <input type="text" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Email</legend>
+                        <input type="email" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Phone Number</legend>
+                        <input type="tel" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Country</legend>
+                        <select class="select">
+                            <option disabled selected>Choose Country</option>
+                            @foreach ($countries as $country)
+                            <option>{{$country['name']}}</option>
+                            @endforeach
+                        </select>
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Province</legend>
+                        <input type="text" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">City</legend>
+                        <input type="text" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Postal Code</legend>
+                        <input type="number" class="input" placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">Address</legend>
+                        <textarea class="textarea" placeholder="Bio"></textarea>
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
+                    <fieldset class="fieldset">
+                        <legend class="fieldset-legend">ID Participant</legend>
+                        <input type="text" class="input " disabled placeholder="" />
+                        <p class="label text-error text-xs">error</p>
+                    </fieldset>
                 </div>
+
+                <fieldset class="fieldset bg-gray-100 border-base-300 rounded-box w-full border p-4">
+                    <legend class="fieldset-legend">Detail Participants</legend>
+                    <div class="grid grid-cols-1 lg:grid-cols-2">
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">First Name</legend>
+                            <input type="text" class="input" placeholder="John" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Last Name</legend>
+                            <input type="text" class="input" placeholder="Doe" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">NIK</legend>
+                            <input type="number" class="input" placeholder="2353 2543 5435 6445" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Title</legend>
+                            <select class="select">
+                                <option disabled selected>Choose Option</option>
+                                <option>Prof.</option>
+                                <option>MD</option>
+                                <option>Mr</option>
+                                <option>Ms</option>
+                                <option>Miss</option>
+                            </select>
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Title specialist</legend>
+                            <input type="text" class="input" placeholder="SpU, SpBP, SpBS" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Speciality</legend>
+                            <select class="select">
+                                <option disabled selected>Select Option</option>
+                                <option>Specialist</option>
+                                <option>Resident</option>
+                                <option>General Practitioner</option>
+                                <option>Medical Student</option>
+
+                            </select>
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Name on certificate</legend>
+                            <input type="text" class="input" placeholder="John Doe, SpU" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Institution</legend>
+                            <input type="text" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Email</legend>
+                            <input type="email" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Phone Number</legend>
+                            <input type="tel" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Country</legend>
+                            <select class="select">
+                                <option disabled selected>Choose Country</option>
+                                @foreach ($countries as $country)
+                                <option>{{$country['name']}}</option>
+                                @endforeach
+                            </select>
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Province</legend>
+                            <input type="text" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">City</legend>
+                            <input type="text" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Postal Code</legend>
+                            <input type="number" class="input" placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">Address</legend>
+                            <textarea class="textarea" placeholder="Bio"></textarea>
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                        <fieldset class="fieldset">
+                            <legend class="fieldset-legend">ID Participant</legend>
+                            <input type="text" class="input " disabled placeholder="" />
+                            <p class="label text-error text-xs">error</p>
+                        </fieldset>
+                    </div>
+                    <button class="btn btn-success mt-5 rounded-lg">Add New <i
+                            class="fa fa-user-plus text-xs"></i></button>
+                </fieldset>
+            </div>
+
+            <div class="flex justify-between p-5">
+                <button wire:click='backToOrderSummary' class="btn btn-error">
+                    <i class="fa fa-angles-left text-xs"></i> Back to Summary
+                </button>
+                <button wire:click='continueToPaymentMethod' class="btn btn-primary">
+                    Continue to Paymnet Method <i class="fa fa-angles-right text-xs"></i>
+                </button>
             </div>
         </div>
-        <fieldset class="fieldset bg-base-200 border-base-300 rounded-box w-xs border p-4">
-            <legend class="fieldset-legend">Page details</legend>
-
-            <label class="label">Title</label>
-            <input type="text" class="input" placeholder="My awesome page" />
-
-            <label class="label">Slug</label>
-            <input type="text" class="input" placeholder="my-awesome-page" />
-
-            <label class="label">Author</label>
-            <input type="text" class="input" placeholder="Name" />
-        </fieldset>
     </section>
+    @endif
+
+    @if ($step == 3)
 
 
     <section class="py-5 lg:py-10 flex flex-col items-center">
@@ -151,25 +369,33 @@
                 <h2 class="card-title">Select Payment Method</h2>
                 <div class="w-full flex justify-between flex-col lg:flex-row py-5">
                     <div class="form-control w-full">
-                        <label class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
+                        <label
+                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
                             <input type="radio" name="radio-4" class="radio radio-primary" checked="checked" />
                             <span>Credit Card <i class="fa fa-credit-card"></i></span>
                         </label>
                     </div>
                     <div class="form-control w-full">
-                        <label class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
+                        <label
+                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
                             <input type="radio" name="radio-4" class="radio radio-primary" />
                             <span>Bank Transfer <i class="fa fa-money-bill-transfer"></i></span>
                         </label>
                     </div>
                 </div>
                 <div class="justify-between card-actions">
-                    <button class="btn btn-error"><i class="fa fa-angles-left text-xs"></i> Back to Summary</button>
-                    <button class="btn btn-primary">Continue <i class="fa fa-angles-right text-xs"></i></button>
+                    <button wire:click='backToParticipant' class="btn btn-error"><i
+                            class="fa fa-angles-left text-xs"></i> Back to detail Participant</button>
+                    <button wire:click='continueToReview' class="btn btn-primary">Continue <i
+                            class="fa fa-angles-right text-xs"></i></button>
                 </div>
             </div>
         </div>
     </section>
+    @endif
+
+    @if ($step == 4)
+
 
     <section class="px-5 lg:px-10 py-5 lg:py-10">
         <div>
@@ -262,7 +488,7 @@
                         </div>
 
                         <div class="flex w-full max-w-xl justify-between mt-10 gap-4">
-                            <button class="btn btn-error">
+                            <button wire:click='backToPaymentMethod' class="btn btn-error">
                                 <i class="fa fa-angles-left text-xs"></i>
                                 Back to Payment
                             </button>
@@ -276,4 +502,5 @@
             </div>
         </div>
     </section>
+    @endif
 </div>

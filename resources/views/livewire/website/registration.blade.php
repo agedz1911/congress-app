@@ -1,4 +1,11 @@
 <div class="w-full">
+
+    <!-- Toast Messages -->
+    <x-toast type="success" :message="session('success')" />
+    <x-toast type="error" :message="session('error')" />
+    <x-toast type="info" :message="session('info')" />
+    
+
     <section class="breadcrumbs relative pb-0">
         <div class="absolute inset-0 bg-gradient-to-b from-[#0059A8]/10 to-[#0059A8]/80"></div>
         <div class="py-16 lg:py-28 text-center relative">
@@ -34,9 +41,9 @@
                                 <td>IDR {{ number_format($product->early_bird_idr, 0, ',', '.') }} <br>
                                     @auth
                                     @if (now()->isBefore($product->early_bird_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button class="btn btn-disabled line-through btn-sm">Add to
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
@@ -48,9 +55,9 @@
 
                                     @if (now()->isAfter($product->early_bird_end) &&
                                     now()->isBefore($product->regular_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button class="btn btn-disabled line-through btn-sm">Add to
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
@@ -64,7 +71,7 @@
                                     <button wire:click='addToCart({{$product->id}}, "onsite")'
                                         class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button class="btn btn-disabled line-through btn-sm">Add to
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
