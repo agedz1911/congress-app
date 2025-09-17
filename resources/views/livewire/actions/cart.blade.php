@@ -6,6 +6,10 @@
         </div>
     </section>
 
+    <x-toast type="success" :message="session('success')" />
+    <x-toast type="error" :message="session('error')" />
+    <x-toast type="info" :message="session('info')" />
+
     <div class="justify-center flex mt-5 lg:mt-10">
         <ul class="steps w-full steps-vertical lg:steps-horizontal">
             <li class="step {{$step >= 1 ? 'step-primary' : '' }}">Order Summary</li>
@@ -15,7 +19,6 @@
         </ul>
     </div>
     @if ($step == 1)
-
 
     <section class="py-5 lg:py-10">
         <div class="flex flex-col lg:flex-row justify-between px-5 lg:px-10 py-5 lg:py-10">
@@ -33,40 +36,34 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <!-- row 1 -->
+                        @forelse ($cartItems as $cartKey => $item)
                         <tr>
                             <td>
                                 <div>
-                                    <p class="font-semibold">Specialist <br>
-                                        <span class="font-normal text-xs">Early Bird</span> <br>
-                                        <span class="font-normal text-xs">Symposium</span>
-                                    </p>
+                                    <p class="font-semibold">{{ $item['name'] }}</p>
+                                    <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ', $item['price_type'])) }}</span> <br>
+                                    <span class="font-normal text-xs">dsad</span>
                                 </div>
                             </td>
-                            <td>1.000.000</td>
+                            <td>{{ $item['currency'] }} {{ number_format($item['price'], 0, ',', '.') }}</td>
                             <td>
-                                <input type="number" placeholder="0" min="1" class="input input-sm" />
+                                <input type="number" value="{{ $item['quantity'] }}" min="1" class="input input-sm" />
                             </td>
-                            <td>1.000.000</td>
+                            <td>{{ $item['currency'] }} {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</td>
                             <td>
-                                <button class="btn btn-xs">
+                                <button wire:click="removeFromCart('{{$cartKey}}')" class="btn btn-xs">
                                     <i class="fa fa-trash text-error text-xs"></i>
                                 </button>
                             </td>
                         </tr>
+                        @empty
                         <tr>
-                            <td>Workshop 1</td>
-                            <td>700.000</td>
-                            <td>
-                                <input type="number" placeholder="0" min="1" class="input input-sm" />
-                            </td>
-                            <td>1.000.000</td>
-                            <td>
-                                <button class="btn btn-xs">
-                                    <i class="fa fa-trash text-error text-xs"></i>
-                                </button>
+                            <td colspan="5">
+                                Your cart is empty. <a href="{{route('registration')}}" wire:navigate
+                                    class="text-primary hover:underline">Continue shopping</a>
                             </td>
                         </tr>
+                        @endforelse
 
                     </tbody>
                 </table>
@@ -81,7 +78,7 @@
                     <div class="card-body">
                         <div class="flex justify-between">
                             <h2 class="card-title">Subtotal</h2>
-                            <h2 class="card-title">1.000.000</h2>
+                            <h2 class="card-title">{{ $subtotal ? ($cartItems ? $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0, ',', '.') : '0') : '0' }}</h2>
                         </div>
                         <h2 class="text-lg font-semibold">Promo Code</h2>
                         <div class="join mb-4">
@@ -96,11 +93,11 @@
                         </div>
                         <div class="flex justify-between">
                             <h2 class="card-title">Discount</h2>
-                            <h2 class="card-title">-100.000</h2>
+                            <h2 class="card-title">-0</h2>
                         </div>
                         <div class="flex justify-between mb-4">
                             <h2 class="card-title">Total</h2>
-                            <h2 class="card-title text-success">1.000.000</h2>
+                            <h2 class="card-title text-success">{{ $subtotal ? ($cartItems ? $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0, ',', '.') : '0') : '0' }}</h2>
                         </div>
                         <p></p>
                         <div class="justify-end card-actions">

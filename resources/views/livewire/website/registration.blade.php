@@ -4,7 +4,6 @@
     <x-toast type="success" :message="session('success')" />
     <x-toast type="error" :message="session('error')" />
     <x-toast type="info" :message="session('info')" />
-    
 
     <section class="breadcrumbs relative pb-0">
         <div class="absolute inset-0 bg-gradient-to-b from-[#0059A8]/10 to-[#0059A8]/80"></div>
@@ -43,7 +42,7 @@
                                     @if (now()->isBefore($product->early_bird_end))
                                     <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
+                                    <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
@@ -57,7 +56,7 @@
                                     now()->isBefore($product->regular_end))
                                     <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
+                                    <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
@@ -71,7 +70,7 @@
                                     <button wire:click='addToCart({{$product->id}}, "onsite")'
                                         class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
-                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-disabled line-through btn-sm">Add to
+                                    <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
                                     @endif
                                     @else
@@ -88,7 +87,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="7">Tidak ada data symposium.</td>
+                                <td class="text-center" colspan="5">Tidak ada data.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -116,7 +115,7 @@
                                 <td>IDR {{ number_format($product->early_bird_idr, 0, ',', '.') }} <br>
                                     @auth
                                     @if (now()->isBefore($product->early_bird_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -130,7 +129,7 @@
 
                                     @if (now()->isAfter($product->early_bird_end) &&
                                     now()->isBefore($product->regular_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -143,7 +142,7 @@
                                     @auth
 
                                     @if (now()->isAfter($product->regular_end))
-                                    <button wire:click='addToCart({{$product->id}}, "onsite")'
+                                    <button wire:click="addToCart('{{$product->id}}')"
                                         class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
@@ -163,13 +162,12 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6">Tidak ada data symposium.</td>
+                                <td class="text-center" colspan="5">Tidak ada data.</td>
                             </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
-
             </div>
 
             <input type="radio" name="reg_tabs" class="tab" aria-label="FOREIGN PARTICIPANT" />
@@ -191,11 +189,11 @@
                             @forelse ($symposiums as $product)
                             <tr>
                                 <th>{{ $loop->iteration }}</th>
-                                <td>{{ $product->name }}</td>
+                                <td>{{ $product->name }} </td>
                                 <td>USD {{ number_format($product->early_bird_usd, 0, ',', '.') }} <br>
                                     @auth
                                     @if (now()->isBefore($product->early_bird_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -209,7 +207,7 @@
 
                                     @if (now()->isAfter($product->early_bird_end) &&
                                     now()->isBefore($product->regular_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -222,7 +220,7 @@
                                     @auth
 
                                     @if (now()->isAfter($product->regular_end))
-                                    <button wire:click='addToCart({{$product->id}}, "onsite")'
+                                    <button wire:click="addToCart('{{$product->id}}')"
                                         class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
@@ -242,7 +240,7 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6">Tidak ada data symposium.</td>
+                                <td class="text-center" colspan="5">Tidak ada data.</td>
                             </tr>
                             @endforelse
                         </tbody>
@@ -270,7 +268,7 @@
                                 <td>USD {{ number_format($product->early_bird_usd, 0, ',', '.') }} <br>
                                     @auth
                                     @if (now()->isBefore($product->early_bird_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -284,7 +282,7 @@
 
                                     @if (now()->isAfter($product->early_bird_end) &&
                                     now()->isBefore($product->regular_end))
-                                    <button class="btn btn-sm btn-primary">Add to Cart</button>
+                                    <button wire:click="addToCart('{{$product->id}}')" class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
                                         Cart</button>
@@ -297,7 +295,7 @@
                                     @auth
 
                                     @if (now()->isAfter($product->regular_end))
-                                    <button wire:click='addToCart({{$product->id}}, "onsite")'
+                                    <button wire:click="addToCart('{{$product->id}}')"
                                         class="btn btn-sm btn-primary">Add to Cart</button>
                                     @else
                                     <button class="btn btn-disabled line-through btn-sm">Add to
@@ -317,14 +315,13 @@
                             </tr>
                             @empty
                             <tr>
-                                <td colspan="6">Tidak ada data symposium.</td>
+                                <td class="text-center" colspan="5">Tidak ada data.</td>
                             </tr>
                             @endforelse
                         </tbody>
                     </table>
                 </div>
             </div>
-
 
         </div>
     </section>

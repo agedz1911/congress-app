@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html data-theme="corporate" class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<html class="scroll-smooth" lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
 <head>
     <meta charset="UTF-8">
@@ -18,6 +18,7 @@
     <!--FontAwesome CSS-->
     <script src="https://kit.fontawesome.com/6d07745da9.js" crossorigin="anonymous"></script>
 
+    @filamentStyles
     @vite('resources/css/app.css')
     {{-- @fluxAppearance --}}
 </head>
@@ -34,6 +35,9 @@
     </button>
     <!-- Back-to-top Button end -->
 
+    @livewire('notifications')
+
+    @filamentScripts
     @vite('resources/js/app.js')
     {{-- @fluxScripts --}}
 

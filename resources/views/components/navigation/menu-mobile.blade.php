@@ -190,7 +190,10 @@
         @endif
         @endauth
         @endif
-        <x-navigation.trolley class="dropdown-end" />
+        {{-- <x-navigation.trolley class="dropdown-end" /> --}}
+        <div>
+            <livewire:actions.trolley />
+        </div>
     </div>
 
 </ul>

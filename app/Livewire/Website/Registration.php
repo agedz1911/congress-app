@@ -4,6 +4,7 @@ namespace App\Livewire\Website;
 
 use App\Models\Registration\Product;
 use App\Models\Registration\RegistrationCategory;
+use Filament\Notifications\Notification;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -41,7 +42,7 @@ class Registration extends Component
         $this->cartCount = count($this->cartItems);
     }
 
-    public function addToCart($productId)
+    public function addToCart($productId, $type = null)
     {
         if (!Auth::check()) {
             session()->flash('error', 'Please login to add items to cart.');
@@ -62,16 +63,32 @@ class Registration extends Component
             return;
         }
 
+        // Determine the registration type based on current time and product dates
+        if ($type === 'onsite' || now()->isAfter($product->regular_end)) {
+            $priceType = 'on_site';
+        } elseif (now()->isAfter($product->early_bird_end) && now()->isBefore($product->regular_end)) {
+            $priceType = 'regular';
+        } else {
+            $priceType = 'early_bird';
+        }
+
+        // Determine currency based on user country
+        $user = Auth::user();
+        $currency = 'idr'; // default currency
+        if ($user && isset($user->country) && strtolower($user->country) !== 'indonesia') {
+            $currency = 'usd';
+        }
+
+        $priceField = $priceType . '_' . $currency;
+
         $this->cartItems[$cartKey] = [
             'product_id' => $product->id,
             'name' => $product->name,
             'regtype_id' => $product->regtype_id,
-            'early_bird_idr' => $product->early_bird_idr,
-            'early_bird_usd' => $product->early_bird_usd,
-            'regular_idr' => $product->regular_idr,
-            'regular_usd' => $product->regular_usd,
-            'on_site_idr' => $product->on_site_idr,
-            'on_site_usd' => $product->on_site_usd,
+            'category' => optional($product->regtype)->regcategory->title ?? 'Unknown',
+            'price' => $product->{$priceField},
+            'currency' => strtoupper($currency),
+            'price_type' => $priceType,
             'quantity' => 1,
         ];
 
@@ -80,7 +97,7 @@ class Registration extends Component
 
         $this->dispatch('cart-updated');
 
-        session()->flash('success', 'Item added to cart sucess');
+        session()->flash('success', 'Item added to cart successfully');
     }
 
     public function render()

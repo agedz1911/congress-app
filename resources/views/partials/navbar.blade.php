@@ -12,7 +12,10 @@
                     <x-navigation.menu />
                 </div>
                 <div class="navbar-end gap-2">
-                    <x-navigation.trolley class="hidden lg:block dropdown-end" />
+                    {{-- <x-navigation.trolley class="hidden lg:block dropdown-end" /> --}}
+                    <div class="hidden lg:block">
+                        <livewire:actions.trolley />
+                    </div>
                     <div class="flex-none lg:hidden">
                         <label for="my-drawer-3" aria-label="open sidebar" class="btn btn-square btn-ghost">
                             <i class="fa fa-bars text-warning dark:text-slate-50 text-2xl"></i>
