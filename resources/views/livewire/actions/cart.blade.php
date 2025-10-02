@@ -41,15 +41,18 @@
                             <td>
                                 <div>
                                     <p class="font-semibold">{{ $item['name'] }}</p>
-                                    <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ', $item['price_type'])) }}</span> <br>
+                                    <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ',
+                                        $item['price_type'])) }}</span> <br>
                                     <span class="font-normal text-xs">dsad</span>
                                 </div>
                             </td>
                             <td>{{ $item['currency'] }} {{ number_format($item['price'], 0, ',', '.') }}</td>
                             <td>
-                                <input type="number" value="{{ $item['quantity'] }}" min="1" class="input input-sm" />
+                                <input type="number" wire:change="updateQuantity('{{$cartKey}}', $event.target.value)"
+                                    value="{{ $item['quantity'] }}" min="1" class="input input-sm" />
                             </td>
-                            <td>{{ $item['currency'] }} {{ number_format($item['price'] * $item['quantity'], 0, ',', '.') }}</td>
+                            <td>{{ $item['currency'] }} {{ number_format($item['price'] * $item['quantity'], 0, ',',
+                                '.') }}</td>
                             <td>
                                 <button wire:click="removeFromCart('{{$cartKey}}')" class="btn btn-xs">
                                     <i class="fa fa-trash text-error text-xs"></i>
@@ -78,26 +81,37 @@
                     <div class="card-body">
                         <div class="flex justify-between">
                             <h2 class="card-title">Subtotal</h2>
-                            <h2 class="card-title">{{ $subtotal ? ($cartItems ? $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0, ',', '.') : '0') : '0' }}</h2>
+                            <h2 class="card-title">{{ $subtotal ? ($cartItems ?
+                                $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0,
+                                ',', '.') : '0') : '0' }}</h2>
                         </div>
                         <h2 class="text-lg font-semibold">Promo Code</h2>
                         <div class="join mb-4">
                             <div>
                                 <label class="input validator join-item">
                                     <i class="fa fa-tag text-primary mr-1"></i>
-                                    <input type="text" placeholder="promo code" />
+                                    <input wire:model.defer="promoCode" id="promoCode" autocomplete="off" type="text"
+                                        placeholder="promo code" />
                                 </label>
-                                <div class="validator-hint hidden">Enter valid Code</div>
+
                             </div>
-                            <button class="btn btn-accent join-item">Apply</button>
+                            <button wire:click='applyPromoCode' class="btn btn-accent join-item">Apply</button>
                         </div>
+                        @if($discount > 0)
                         <div class="flex justify-between">
                             <h2 class="card-title">Discount</h2>
-                            <h2 class="card-title">-0</h2>
+                            <h2 class="card-title">
+
+                                -{{number_format($discount, 0, ',', '.')}}
+
+                            </h2>
                         </div>
+                        @endif
                         <div class="flex justify-between mb-4">
                             <h2 class="card-title">Total</h2>
-                            <h2 class="card-title text-success">{{ $subtotal ? ($cartItems ? $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0, ',', '.') : '0') : '0' }}</h2>
+                            <h2 class="card-title text-success">{{ $subtotal ? ($cartItems ?
+                                $cartItems[array_key_first($cartItems)]['currency'] . ' ' . number_format($subtotal, 0,
+                                ',', '.') : '0') : '0' }}</h2>
                         </div>
                         <p></p>
                         <div class="justify-end card-actions">

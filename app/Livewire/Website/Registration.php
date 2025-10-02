@@ -100,6 +100,21 @@ class Registration extends Component
         session()->flash('success', 'Item added to cart successfully');
     }
 
+    public function processToCheckout()
+    {
+        if (!Auth::check()) {
+            session()->flash('error', 'Please login to proceed to checkout.');
+            return redirect()->route('login');
+        }
+
+        if (empty($this->cartItems)) {
+            session()->flash('error', 'Your cart is empty.');
+            return;
+        }
+
+        return redirect()->route('cart');
+    }
+
     public function render()
     {
         return view('livewire.website.registration');

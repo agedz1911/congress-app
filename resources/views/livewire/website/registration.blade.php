@@ -168,6 +168,14 @@
                         </tbody>
                     </table>
                 </div>
+                @if($cartCount > 0)
+                <div class="mt-5 flex justify-end">
+                    <button wire:click="processToCheckout" type="button" class="font-semibold  btn btn-primary">
+                        process to checkout
+                        <i class="fa fa-angle-right text-xs font-semibold"></i>
+                    </button>
+                </div>
+                @endif
             </div>
 
             <input type="radio" name="reg_tabs" class="tab" aria-label="FOREIGN PARTICIPANT" />
@@ -321,6 +329,14 @@
                         </tbody>
                     </table>
                 </div>
+                @if($cartCount > 0)
+                <div class="mt-5 flex justify-end">
+                    <button wire:click="processToCheckout" type="button" class="font-semibold  btn btn-primary">
+                        process to checkout
+                        <i class="fa fa-angle-right text-xs font-semibold"></i>
+                    </button>
+                </div>
+                @endif
             </div>
 
         </div>
