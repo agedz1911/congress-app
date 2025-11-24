@@ -28,4 +28,12 @@ Route::middleware(['auth'])->group(function () {
     Route::get('settings/appearance', Appearance::class)->name('settings.appearance');
 });
 
+Route::middleware(['auth'])->group(function () {
+    // Route::redirect('dashboard', 'dashboard/participants');
+
+    Route::get('dashboard/participants', App\Livewire\Dashboard\Participant\MyParticipant::class)->name('myparticipants');
+    Route::get('dashboard/bookings', App\Livewire\Dashboard\Booking\MyBooking::class)->name('mybookings');
+    Route::get('dashboard/registrations', App\Livewire\Dashboard\Registration\MyRegistration::class)->name('myregistrations');
+});
+
 require __DIR__ . '/auth.php';

@@ -18,17 +18,20 @@
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
+                <flux:navlist.item icon="users" :href="route('myparticipants')" :current="request()->routeIs('myparticipants')" wire:navigate>{{ __('Participants') }}</flux:navlist.item>
+                <flux:navlist.item icon="building-office-2" :href="route('mybookings')" :current="request()->routeIs('mybookings')" wire:navigate>{{ __('My Booking') }}</flux:navlist.item>
+                <flux:navlist.item icon="document-text" :href="route('myregistrations')" :current="request()->routeIs('myregistrations')" wire:navigate>{{ __('My Registration') }}</flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 
         <flux:spacer />
 
         <flux:navlist variant="outline">
-            <flux:navlist.item icon="globe-alt" href="/" >
+            <flux:navlist.item icon="globe-alt" href="/">
                 {{ __('Homepage') }}
             </flux:navlist.item>
 
-            <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire" >
+            <flux:navlist.item icon="book-open-text" href="https://laravel.com/docs/starter-kits#livewire">
                 {{ __('Documentation') }}
             </flux:navlist.item>
         </flux:navlist>

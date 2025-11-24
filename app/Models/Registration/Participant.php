@@ -39,7 +39,15 @@ class Participant extends Model
 
     public function scopeSearch($query, $value)
     {
-        $query->where('first_name', 'like', "%{$value}%");
+        if (empty ($value)) {
+            return $query;
+        }
+        return $query->where(function ($query) use ($value) {
+            $query->where('first_name', 'like', '%' . $value . '%')
+                ->orWhere('last_name', 'like', '%' . $value . '%');
+                // ->orWhere('email', 'like', '%' . $value . '%')
+                // ->orWhere('country', 'like', '%' . $value . '%');
+        });
     }
 
     public function user(): BelongsTo
