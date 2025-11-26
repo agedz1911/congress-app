@@ -32,6 +32,8 @@ Route::middleware(['auth'])->group(function () {
     // Route::redirect('dashboard', 'dashboard/participants');
 
     Route::get('dashboard/participants', App\Livewire\Dashboard\Participant\MyParticipant::class)->name('myparticipants');
+    Route::get('dashboard/participants/create', App\Livewire\Dashboard\Participant\CreateParticipant::class)->name('createparticipants');
+    Route::get('dashboard/participants/{id}/edit', App\Livewire\Dashboard\Participant\EditParticipant::class)->name('editparticipants');
     Route::get('dashboard/bookings', App\Livewire\Dashboard\Booking\MyBooking::class)->name('mybookings');
     Route::get('dashboard/registrations', App\Livewire\Dashboard\Registration\MyRegistration::class)->name('myregistrations');
 });

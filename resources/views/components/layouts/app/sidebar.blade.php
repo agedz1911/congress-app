@@ -8,6 +8,7 @@
 </head>
 
 <body class="min-h-screen bg-white dark:bg-zinc-800">
+    
     <flux:sidebar sticky stashable class="border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
         <flux:sidebar.toggle class="lg:hidden" icon="x-mark" />
 
@@ -18,7 +19,7 @@
         <flux:navlist variant="outline">
             <flux:navlist.group :heading="__('Platform')" class="grid">
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
-                <flux:navlist.item icon="users" :href="route('myparticipants')" :current="request()->routeIs('myparticipants')" wire:navigate>{{ __('Participants') }}</flux:navlist.item>
+                <flux:navlist.item icon="users" :href="route('myparticipants')" :current="request()->routeIs('myparticipants') || request()->routeIs('createparticipants') || request()->routeIs('editparticipants')" wire:navigate>{{ __('Participants') }}</flux:navlist.item>
                 <flux:navlist.item icon="building-office-2" :href="route('mybookings')" :current="request()->routeIs('mybookings')" wire:navigate>{{ __('My Booking') }}</flux:navlist.item>
                 <flux:navlist.item icon="document-text" :href="route('myregistrations')" :current="request()->routeIs('myregistrations')" wire:navigate>{{ __('My Registration') }}</flux:navlist.item>
             </flux:navlist.group>

@@ -1,18 +1,19 @@
 <div>
-    <x-toast type="success" :message="session('success')" :duration="5000" />
+    <x-toast type="success" :message="session('success')" />
     <x-toast type="error" :message="session('error')" />
     <x-toast type="info" :message="session('info')" />
+    
     <div>
         <div class="breadcrumbs text-sm">
             <ul>
                 <li><a href="{{route('dashboard')}}" wire:navigate>Dashboard</a></li>
                 <li><a href="{{route('myparticipants')}}" wire:navigate>Participants</a></li>
-                <li>Create</li>
+                <li>Edit</li>
             </ul>
         </div>
-        <h4 class="text-xl">Create Participant</h4>
+        <h4 class="text-xl">Edit Participant</h4>
     </div>
-    <form wire:submit.prevent="create">
+    <form wire:submit.prevent="update">
         <div class=" p-4 grid grid-cols-1 lg:grid-cols-2">
             <fieldset class="fieldset">
                 <legend class="fieldset-legend">First Name</legend>
@@ -157,21 +158,14 @@
         </div>
         <div class="mt-4 flex justify-start gap-2">
             <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="create">Create</span>
-                <span wire:loading wire:target="create">
+                <span wire:loading.remove wire:target="update">Save Change</span>
+                <span wire:loading wire:target="update">
                     <span class="loading loading-spinner loading-xs"></span>
-                    Creating...
+                    Saving...
                 </span>
 
             </button>
-            <button type="submit" class="btn btn-soft btn-primary" wire:click="createAnother"
-                wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="createAnother">Create & Create Another</span>
-                <span wire:loading wire:target="createAnother">
-                    <span class="loading loading-spinner loading-xs"></span>
-                    Creating...
-                </span>
-            </button>
+
             <a href="{{route('myparticipants')}}" wire:navigate class="btn btn-error">Cancel</a>
         </div>
     </form>

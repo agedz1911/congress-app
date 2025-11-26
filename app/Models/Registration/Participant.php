@@ -39,19 +39,39 @@ class Participant extends Model
 
     public function scopeSearch($query, $value)
     {
-        if (empty ($value)) {
+        if (empty($value)) {
             return $query;
         }
         return $query->where(function ($query) use ($value) {
             $query->where('first_name', 'like', '%' . $value . '%')
                 ->orWhere('last_name', 'like', '%' . $value . '%');
-                // ->orWhere('email', 'like', '%' . $value . '%')
-                // ->orWhere('country', 'like', '%' . $value . '%');
+            // ->orWhere('email', 'like', '%' . $value . '%')
+            // ->orWhere('country', 'like', '%' . $value . '%');
         });
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($participant) {
+            if (empty($participant->id_participant)) {
+                $participant->id_participant = self::generateIdParticipant();
+            }
+        });
+    }
+
+    public static function generateIdParticipant()
+    {
+        do {
+            $idParticipant = 'EVENT-' . random_int(10000, 99999);
+        } while (self::where('id_participant', $idParticipant)->exists());
+
+        return $idParticipant;
     }
 }

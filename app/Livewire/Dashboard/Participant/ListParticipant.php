@@ -21,10 +21,18 @@ class ListParticipant extends Component
 
     public function destroy($id)
     {
-        $participant = Participant::findOrFail($id);
-        $participant->delete();
-        session()->flash('message', 'Participant deleted successfully.');
-        $this->resetPage();
+        try {
+            $participant = Participant::findOrFail($id);
+            if ($participant->user_id !== auth()->id()) {
+                session()->flash('error', 'You are not authorized to delete this participant.');
+                return;
+            }
+            $participant->delete();
+            session()->flash('message', 'Participant deleted successfully.');
+            $this->resetPage();
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to delete participant: ' . $e->getMessage());
+        }
     }
 
     public function render()

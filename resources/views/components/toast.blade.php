@@ -1,6 +1,6 @@
 @props([
 'type' => 'success',
-'duration' => 500,
+'duration' => 3000,
 'message' => null
 ])
 
@@ -18,63 +18,14 @@ $text = $message ?? session('message');
 @if($text)
 @php $toastId = 'toast-message-' . uniqid(); @endphp
 
-<div class="toast z-40" id="{{ $toastId }}" data-duration="{{ (int) $duration }}">
+<div class="toast z-40" id="{{ $toastId }}" data-duration="{{ (int) $duration }}" x-data="{ show: true }" x-show="show"
+    x-init="setTimeout(() => show = false, 3000)">
+    <button class="btn btn-circle btn-xs float-end right-0 bottom-10 absolute" onclick="this.parentElement.remove()">
+        <i class="fa fa-x text-xs"></i>
+    </button>
     <div class="alert {{ $variant }}">
         <span class="text-sm">{{ $text }}</span>
     </div>
 </div>
 
-<script>
-    (function() {
-            // Pastikan script ini jalan setelah element tersedia
-            const toastId = '{{ $toastId }}';
-            const init = () => {
-                const toast = document.getElementById(toastId);
-                if (!toast) return;
-
-                const duration = parseInt(toast.getAttribute('data-duration')) || 5000;
-
-                // Tambahkan opacity awal supaya animasi terlihat
-                toast.style.opacity = '1';
-
-                setTimeout(() => {
-                    toast.style.transition = 'opacity 0.5s ease-out';
-                    toast.style.opacity = '0';
-                    setTimeout(() => toast.remove(), 500);
-                }, duration);
-            };
-
-            if (document.readyState === 'loading') {
-                document.addEventListener('DOMContentLoaded', init);
-            } else {
-                init();
-            }
-        })();
-</script>
 @endif
-
-{{-- @if($message || session('message'))
-@php
-$toastId = 'toast-message-' . uniqid();
-@endphp
-<div class="toast z-40 " id="{{ $toastId }}" data-duration="{{ $duration }}">
-    <div class="alert alert-error">
-        <span class="text-sm ">{{ $message ?? session('message') }}</span>
-    </div>
-</div>
-<script>
-    setTimeout(function() {
-        const toast = document.getElementById('{{ $toastId }}');
-        if (toast) {
-            const duration = parseInt(toast.getAttribute('data-duration')) || 5000;
-            setTimeout(function() {
-                toast.style.transition = 'opacity 0.5s ease-out';
-                toast.style.opacity = '0';
-                setTimeout(function() {
-                    toast.remove();
-                }, 500);
-            }, duration);
-        }
-    }, 100);
-</script>
-@endif --}}
