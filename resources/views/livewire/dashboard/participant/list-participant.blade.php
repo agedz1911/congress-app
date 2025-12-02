@@ -9,10 +9,10 @@
         </label>
         <a href="{{route('createparticipants')}}" wire:navigate class="btn btn-primary"><i class="fa fa-plus"></i> Add New</a>
     </div>
-    <div class="overflow-x-auto rounded-box border border-base-content/5 bg-base-100">
-        <table class="table">
+    <div class="overflow-x-auto rounded-box border dark:border-zinc-50/5 boder-zinc-200">
+        <table class="table ">
             <!-- head -->
-            <thead>
+            <thead class="text-zinc-700 dark:text-zinc-50 ">
                 <tr>
                     <th>ID Participant</th>
                     <th>Full Name</th>
@@ -31,7 +31,7 @@
                     <th>Actions</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="text-zinc-700 dark:text-zinc-50">
                 @foreach($participants as $participant)
                 <tr>
                     <td>{{$participant->id_participant}}</td>

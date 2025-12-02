@@ -4,19 +4,19 @@
     <x-toast type="info" :message="session('info')" />
     
     <div>
-        <div class="breadcrumbs text-sm">
+        <div class="breadcrumbs text-sm text-zinc-700 dark:text-zinc-50">
             <ul>
                 <li><a href="{{route('dashboard')}}" wire:navigate>Dashboard</a></li>
                 <li><a href="{{route('myparticipants')}}" wire:navigate>Participants</a></li>
                 <li>Edit</li>
             </ul>
         </div>
-        <h4 class="text-xl">Edit Participant</h4>
+        <h4 class="text-xl text-zinc-700 dark:text-zinc-50">Edit Participant</h4>
     </div>
     <form wire:submit.prevent="update">
         <div class=" p-4 grid grid-cols-1 lg:grid-cols-2">
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">First Name</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">First Name</legend>
                 <input type="text" class="input @error('first_name') border-error @enderror" wire:model="first_name"
                     placeholder="John" />
                 @error('first_name')
@@ -24,7 +24,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Last Name</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Last Name</legend>
                 <input type="text" class="input @error('last_name') border-error @enderror" wire:model="last_name"
                     placeholder="Doe" />
                 @error('last_name')
@@ -32,7 +32,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">NIK</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">NIK</legend>
                 <input type="number" class="input @error('nik') border-error @enderror" wire:model="nik"
                     placeholder="2353 2543 5435 6445" />
                 @error('nik')
@@ -40,7 +40,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Title</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Title</legend>
                 <select class="select @error('title') border-error @enderror" wire:model="title">
                     <option disabled value="">Choose Option</option>
                     <option value="Prof.">Prof.</option>
@@ -54,7 +54,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Title specialist</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Title specialist</legend>
                 <input type="text" class="input @error('title_specialist') border-error @enderror"
                     wire:model="title_specialist" placeholder="SpU, SpBP, SpBS" />
                 @error('title_specialist')
@@ -62,7 +62,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Speciality</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Speciality</legend>
                 <select class="select @error('speciality') border-error @enderror" wire:model="speciality">
                     <option disabled value="">Select Option</option>
                     <option value="Specialist">Specialist</option>
@@ -76,7 +76,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Name on certificate</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Name on certificate</legend>
                 <input type="text" class="input @error('name_on_certificate') border-error @enderror"
                     wire:model="name_on_certificate" placeholder="John Doe, SpU" />
                 @error('name_on_certificate')
@@ -84,7 +84,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Institution</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Institution</legend>
                 <input type="text" class="input @error('institution') border-error @enderror" wire:model="institution"
                     placeholder="" />
                 @error('institution')
@@ -92,7 +92,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Email</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Email</legend>
                 <input type="email" class="input @error('email') border-error @enderror" wire:model="email"
                     placeholder="" />
                 @error('email')
@@ -100,7 +100,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Phone Number</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Phone Number</legend>
                 <input type="tel" class="input @error('phone_number') border-error @enderror" wire:model="phone_number"
                     placeholder="" />
                 @error('phone_number')
@@ -108,7 +108,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Country</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Country</legend>
                 <select class="select @error('country') border-error @enderror" wire:model="country">
                     <option disabled value="">Choose Country</option>
                     @foreach ($countries as $country)
@@ -120,7 +120,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Province</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Province</legend>
                 <input type="text" class="input @error('province') border-error @enderror" wire:model="province"
                     placeholder="" />
                 @error('province')
@@ -128,7 +128,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">City</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">City</legend>
                 <input type="text" class="input @error('city') border-error @enderror" wire:model="city"
                     placeholder="" />
                 @error('city')
@@ -136,7 +136,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Postal Code</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Postal Code</legend>
                 <input type="number" class="input @error('postal_code') border-error @enderror" wire:model="postal_code"
                     placeholder="" />
                 @error('postal_code')
@@ -144,7 +144,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">Address</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">Address</legend>
                 <textarea class="textarea @error('address') border-error @enderror" wire:model="address"
                     placeholder="Street"></textarea>
                 @error('address')
@@ -152,7 +152,7 @@
                 @enderror
             </fieldset>
             <fieldset class="fieldset">
-                <legend class="fieldset-legend">ID Participant</legend>
+                <legend class="fieldset-legend text-zinc-700 dark:text-zinc-50">ID Participant</legend>
                 <input type="text" class="input" disabled wire:model="id_participant" />
             </fieldset>
         </div>

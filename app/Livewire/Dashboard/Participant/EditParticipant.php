@@ -132,6 +132,7 @@ class EditParticipant extends Component
             session()->flash('success', 'Participant updated successfully.');
             // return redirect()->route('myparticipants');
             $this->participant->refresh();
+            
         } catch (\Exception $e) {
             session()->flash('error', 'An error occurred while updating the participant: ' . $e->getMessage());
         }

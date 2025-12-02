@@ -135,9 +135,9 @@ class CreateParticipant extends Component
             ]);
 
             session()->flash('success', 'Participant created successfully! You can create another one.');
-
             // Reset form
             $this->resetForm();
+            
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to create participant: ' . $e->getMessage());
         }

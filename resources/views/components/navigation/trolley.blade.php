@@ -19,7 +19,7 @@
             @endif
             {{-- <span class="text-info">Subtotal: $999</span> --}}
             <div class="card-actions">
-                <a href="{{route('cart')}}" class="btn btn-primary btn-block">View cart</a>
+                <a href="{{route('reg-cart')}}" class="btn btn-primary btn-block">View cart</a>
             </div>
         </div>
     </div>

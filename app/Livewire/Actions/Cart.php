@@ -8,7 +8,7 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
-#[Layout('components.layouts.website')]
+// #[Layout('components.layouts.website')]
 #[Title('Cart - Congress App')]
 class Cart extends Component
 {

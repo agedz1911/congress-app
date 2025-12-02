@@ -14,11 +14,10 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
 Route::get('/registration', Registration::class)->name('registration');
-Route::get('/cart', Cart::class)->name('cart');
 
 Route::view('dashboard', 'dashboard')
-    ->middleware(['auth', 'verified'])
-    ->name('dashboard');
+->middleware(['auth', 'verified'])
+->name('dashboard');
 
 Route::middleware(['auth'])->group(function () {
     Route::redirect('settings', 'settings/profile');
@@ -36,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard/participants/{id}/edit', App\Livewire\Dashboard\Participant\EditParticipant::class)->name('editparticipants');
     Route::get('dashboard/bookings', App\Livewire\Dashboard\Booking\MyBooking::class)->name('mybookings');
     Route::get('dashboard/registrations', App\Livewire\Dashboard\Registration\MyRegistration::class)->name('myregistrations');
+    Route::get('dashboard/registrations/cart', Cart::class)->name('reg-cart');
 });
 
 require __DIR__ . '/auth.php';

@@ -112,7 +112,7 @@ class Registration extends Component
             return;
         }
 
-        return redirect()->route('cart');
+        return redirect()->route('reg-cart');
     }
 
     public function render()
