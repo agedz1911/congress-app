@@ -3,6 +3,7 @@
 namespace App\Livewire\Actions;
 
 use App\Models\Manage\Coupon;
+use App\Models\Registration\Participant;
 use Illuminate\Support\Facades\Auth;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
@@ -20,6 +21,10 @@ class Cart extends Component
     public $promoCode = '';
     public $total = 0;
 
+    public $participants = [];
+    public $selectedParticipantId = null;
+    public $hasParticipants = false;
+
     public function mount()
     {
         $this->countries = countries();
@@ -30,6 +35,7 @@ class Cart extends Component
 
         $this->loadCartFromSession();
         $this->calculateTotals();
+        $this->loadUserParticipants();
     }
 
     public function loadCartFromSession()
@@ -202,6 +208,20 @@ class Cart extends Component
         ]);
     }
 
+    public function loadUserParticipants()
+    {
+        $participantsCollection = Participant::where('user_id', Auth::id())
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $this->participants = $participantsCollection->toArray();
+        $this->hasParticipants = count($this->participants) > 0;
+
+        if (session()->has('selected_participant_id')) {
+            $this->selectedParticipantId = session()->get('selected_participant_id');
+        }
+    }
+
     public function backToRegistration()
     {
         return redirect()->route('registration');
@@ -214,18 +234,44 @@ class Cart extends Component
 
     public function continueToParticipant()
     {
+        if (empty($this->cartItems)) {
+            session()->flash('error', 'Your cart is empty. Please add items to cart first.');
+            return;
+        }
 
+        $this->loadUserParticipants();
         $this->step = 2;
+    }
+
+    public function redirectToAddParticipant()
+    {
+        session()->put('return_to_cart_step', 2);
+        return redirect()->route('createparticipants');
+    }
+
+    public function unselectParticipant()
+    {
+        $this->selectedParticipantId = null;
+        session()->forget('selected_participant_id');
+        session()->flash('info', 'Participant selection removed.');
     }
 
     public function backToParticipant()
     {
-
+        $this->loadUserParticipants();
         $this->step = 2;
     }
 
     public function continueToPaymentMethod()
     {
+        if ($this->hasParticipants && !$this->selectedParticipantId) {
+            session()->flash('error', 'Please select a participant to continue.');
+            return;
+        }
+
+        if ($this->selectedParticipantId) {
+            session()->put('selected_participant_id', $this->selectedParticipantId);
+        }
 
         $this->step = 3;
     }

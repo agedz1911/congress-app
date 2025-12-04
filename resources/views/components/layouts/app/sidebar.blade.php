@@ -28,13 +28,11 @@
         <flux:spacer />
 
         <flux:navlist variant="outline">
-            <flux:navlist.item icon="globe-alt" href="{{route('home')}}">
+            <flux:navlist.item icon="globe-alt" href="{{route('home')}}" wire:navigate>
                 {{ __('Homepage') }}
             </flux:navlist.item>
 
-            <flux:navlist.item icon="book-open-text" href="#">
-                {{ __('Documentation') }}
-            </flux:navlist.item>
+            <livewire:actions.cart-sidebar />
         </flux:navlist>
 
         <!-- Desktop User Menu -->

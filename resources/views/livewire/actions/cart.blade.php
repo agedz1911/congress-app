@@ -1,11 +1,4 @@
 <div>
-    <!-- <section class="breadcrumbs relative pb-0">
-        <div class="absolute inset-0 bg-gradient-to-b from-[#0059A8]/10 to-[#0059A8]/80"></div>
-        <div class="py-16 lg:py-28 text-center relative">
-            <h2 class="text-white uppercase text-2xl font-semibold tracking-wide lg:text-4xl">Cart</h2>
-        </div>
-    </section> -->
-
     <x-toast type="success" :message="session('success')" />
     <x-toast type="error" :message="session('error')" />
     <x-toast type="info" :message="session('info')" />
@@ -126,245 +119,140 @@
     @endif
 
     @if ($step == 2)
-
-
     <section class="p-5 lg:p-10">
         <div class="card w-full bg-base-100 shadow-sm">
             <div class="card-body">
                 <span class="badge badge-xs badge-warning">Participants</span>
-                <div class="w-full flex justify-between flex-col lg:flex-row py-5">
-                    <div class="form-control w-full">
-                        <label
-                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
-                            <input type="radio" name="radio-4" class="radio radio-primary" />
-                            <span><i class="fa fa-user"></i> Register for my Self </span>
-                        </label>
+
+                <div class="w-full py-5">
+                    @if (!$hasParticipants)
+                    {{-- Tampilkan jika user belum punya participant --}}
+                    <div class="w-full flex flex-col justify-center items-center mb-5 p-8 bg-base-200 rounded-lg">
+                        <i class="fa fa-user-plus text-4xl text-gray-400 mb-4"></i>
+                        <h4 class="text-lg font-semibold mb-2">You don't have any Participant Details yet</h4>
+                        <p class="text-gray-500 mb-4 text-center">Please add participant details to continue with your
+                            order</p>
+                        <button wire:click="redirectToAddParticipant" class="btn btn-primary">
+                            <i class="fa fa-user-plus"></i> Add Detail Participants
+                        </button>
                     </div>
-                    <div class="form-control w-full">
-                        <label
-                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
-                            <input type="radio" name="radio-4" class="radio radio-primary" />
-                            <span><i class="fa fa-users"></i> Register for others person </span>
-                        </label>
-                    </div>
-                </div>
-                <div
-                    class="bg-gray-100 border-base-300 rounded-box rounded-lg border p-4 grid grid-cols-1 lg:grid-cols-2">
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">First Name</legend>
-                        <input type="text" class="input" placeholder="John" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Last Name</legend>
-                        <input type="text" class="input" placeholder="Doe" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">NIK</legend>
-                        <input type="number" class="input" placeholder="2353 2543 5435 6445" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Title</legend>
-                        <select class="select">
-                            <option disabled selected>Choose Option</option>
-                            <option>Prof.</option>
-                            <option>MD</option>
-                            <option>Mr</option>
-                            <option>Ms</option>
-                            <option>Miss</option>
-                        </select>
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Title specialist</legend>
-                        <input type="text" class="input" placeholder="SpU, SpBP, SpBS" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Speciality</legend>
-                        <select class="select">
-                            <option disabled selected>Select Option</option>
-                            <option>Specialist</option>
-                            <option>Resident</option>
-                            <option>General Practitioner</option>
-                            <option>Medical Student</option>
+                    @else
+                    {{-- Tampilkan jika user sudah punya participant --}}
+                    <div class="w-full mb-5">
+                        <h4 class="text-lg font-semibold mb-3">Select Participant for this Order</h4>
 
-                        </select>
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Name on certificate</legend>
-                        <input type="text" class="input" placeholder="John Doe, SpU" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Institution</legend>
-                        <input type="text" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Email</legend>
-                        <input type="email" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Phone Number</legend>
-                        <input type="tel" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Country</legend>
-                        <select class="select">
-                            <option disabled selected>Choose Country</option>
-                            @foreach ($countries as $country)
-                            <option>{{$country['name']}}</option>
-                            @endforeach
-                        </select>
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Province</legend>
-                        <input type="text" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">City</legend>
-                        <input type="text" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Postal Code</legend>
-                        <input type="number" class="input" placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">Address</legend>
-                        <textarea class="textarea" placeholder="Bio"></textarea>
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                    <fieldset class="fieldset">
-                        <legend class="fieldset-legend">ID Participant</legend>
-                        <input type="text" class="input " disabled placeholder="" />
-                        <p class="label text-error text-xs">error</p>
-                    </fieldset>
-                </div>
-
-                <fieldset class="fieldset bg-gray-100 border-base-300 rounded-box w-full border p-4">
-                    <legend class="fieldset-legend">Detail Participants</legend>
-                    <div class="grid grid-cols-1 lg:grid-cols-2">
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">First Name</legend>
-                            <input type="text" class="input" placeholder="John" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Last Name</legend>
-                            <input type="text" class="input" placeholder="Doe" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">NIK</legend>
-                            <input type="number" class="input" placeholder="2353 2543 5435 6445" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Title</legend>
-                            <select class="select">
-                                <option disabled selected>Choose Option</option>
-                                <option>Prof.</option>
-                                <option>MD</option>
-                                <option>Mr</option>
-                                <option>Ms</option>
-                                <option>Miss</option>
-                            </select>
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Title specialist</legend>
-                            <input type="text" class="input" placeholder="SpU, SpBP, SpBS" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Speciality</legend>
-                            <select class="select">
-                                <option disabled selected>Select Option</option>
-                                <option>Specialist</option>
-                                <option>Resident</option>
-                                <option>General Practitioner</option>
-                                <option>Medical Student</option>
-
-                            </select>
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Name on certificate</legend>
-                            <input type="text" class="input" placeholder="John Doe, SpU" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Institution</legend>
-                            <input type="text" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Email</legend>
-                            <input type="email" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Phone Number</legend>
-                            <input type="tel" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Country</legend>
-                            <select class="select">
-                                <option disabled selected>Choose Country</option>
-                                @foreach ($countries as $country)
-                                <option>{{$country['name']}}</option>
+                        <fieldset class="fieldset w-full">
+                            <legend class="fieldset-legend">Participant List</legend>
+                            {{-- Gunakan wire:model.live agar langsung reactive --}}
+                            <select wire:model.live="selectedParticipantId" class="select w-full select-bordered">
+                                <option value="">-- Select a Participant --</option>
+                                @foreach ($participants as $participant)
+                                <option value="{{ $participant['id'] }}">
+                                    {{ $participant['first_name'] }} {{ $participant['last_name'] ?? '' }}
+                                    ({{ $participant['email'] }})
+                                    @if(!empty($participant['institution']))
+                                    - {{ $participant['institution'] }}
+                                    @endif
+                                </option>
                                 @endforeach
                             </select>
-                            <p class="label text-error text-xs">error</p>
+                            @error('selectedParticipantId')
+                            <span class="label text-xs italic text-error">{{ $message }}</span>
+                            @enderror
                         </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Province</legend>
-                            <input type="text" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">City</legend>
-                            <input type="text" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Postal Code</legend>
-                            <input type="number" class="input" placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">Address</legend>
-                            <textarea class="textarea" placeholder="Bio"></textarea>
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
-                        <fieldset class="fieldset">
-                            <legend class="fieldset-legend">ID Participant</legend>
-                            <input type="text" class="input " disabled placeholder="" />
-                            <p class="label text-error text-xs">error</p>
-                        </fieldset>
+
+                        {{-- Preview participant yang dipilih --}}
+                        @if ($selectedParticipantId)
+                        @php
+                        $selectedParticipant = collect($participants)->firstWhere('id', $selectedParticipantId);
+                        @endphp
+                        @if ($selectedParticipant)
+                        <div class="mt-4 p-4 bg-base-200 rounded-lg border-2 border-primary">
+                            <div class="flex justify-between items-center mb-2">
+                                <h5 class="font-semibold">Selected Participant Details:</h5>
+                                <button wire:click="unselectParticipant" class="btn btn-sm btn-ghost btn-circle"
+                                    title="Remove selection">
+                                    <i class="fa fa-times text-error"></i>
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+                                <div>
+                                    <span class="font-medium text-gray-600">Name:</span>
+                                    <p class="font-semibold">
+                                        {{ $selectedParticipant['first_name'] }} {{ $selectedParticipant['last_name'] ??
+                                        '' }}
+                                    </p>
+                                </div>
+                                <div>
+                                    <span class="font-medium text-gray-600">Email:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['email'] }}</p>
+                                </div>
+                                @if(!empty($selectedParticipant['phone_number']))
+                                <div>
+                                    <span class="font-medium text-gray-600">Phone:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['phone_number'] }}</p>
+                                </div>
+                                @endif
+                                @if(!empty($selectedParticipant['institution']))
+                                <div>
+                                    <span class="font-medium text-gray-600">Institution:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['institution'] }}</p>
+                                </div>
+                                @endif
+                                @if(!empty($selectedParticipant['country']))
+                                <div>
+                                    <span class="font-medium text-gray-600">Country:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['country'] }}</p>
+                                </div>
+                                @endif
+                                @if(!empty($selectedParticipant['city']))
+                                <div>
+                                    <span class="font-medium text-gray-600">City:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['city'] }}</p>
+                                </div>
+                                @endif
+                                @if(!empty($selectedParticipant['title']))
+                                <div>
+                                    <span class="font-medium text-gray-600">Title:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['title'] }}</p>
+                                </div>
+                                @endif
+                                @if(!empty($selectedParticipant['speciality']))
+                                <div>
+                                    <span class="font-medium text-gray-600">Speciality:</span>
+                                    <p class="font-semibold">{{ $selectedParticipant['speciality'] }}</p>
+                                </div>
+                                @endif
+                            </div>
+
+                            {{-- Tombol untuk unselect --}}
+                            <div class="mt-3 pt-3 border-t border-gray-300">
+                                <button wire:click="unselectParticipant" class="btn btn-sm btn-outline btn-error">
+                                    <i class="fa fa-times"></i> Remove Selection
+                                </button>
+                            </div>
+                        </div>
+                        @endif
+                        @endif
+
+                        {{-- Tombol untuk menambah participant baru --}}
+                        <div class="mt-4">
+                            <button wire:click="redirectToAddParticipant" class="btn btn-outline btn-sm">
+                                <i class="fa fa-plus"></i> Add New Participant
+                            </button>
+                        </div>
                     </div>
-                    <button class="btn btn-success mt-5 rounded-lg">Add New <i
-                            class="fa fa-user-plus text-xs"></i></button>
-                </fieldset>
+                    @endif
+                </div>
             </div>
 
             <div class="flex justify-between p-5">
                 <button wire:click='backToOrderSummary' class="btn btn-error">
                     <i class="fa fa-angles-left text-xs"></i> Back to Summary
                 </button>
-                <button wire:click='continueToPaymentMethod' class="btn btn-primary">
-                    Continue to Paymnet Method <i class="fa fa-angles-right text-xs"></i>
+                <button wire:click='continueToPaymentMethod' class="btn btn-primary" @if(!$hasParticipants ||
+                    !$selectedParticipantId) disabled @endif>
+                    Continue to Payment Method <i class="fa fa-angles-right text-xs"></i>
                 </button>
             </div>
         </div>
