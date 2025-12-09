@@ -2,11 +2,21 @@
     <x-toast type="success" :message="session('success')" :duration="5000" />
     <x-toast type="error" :message="session('error')" />
     <x-toast type="info" :message="session('info')" />
+    @if($fromCart)
+    <div class="alert alert-info mb-4">
+        <i class="fa fa-info-circle"></i>
+        <span>You're adding participant details for your order. After creating, you'll be redirected back to continue your checkout.</span>
+    </div>
+    @endif
     <div>
         <div class="breadcrumbs text-sm text-zinc-700 dark:text-zinc-50">
             <ul>
                 <li><a href="{{route('dashboard')}}" wire:navigate>Dashboard</a></li>
+                @if($fromCart)
+                <li><a href="{{route('reg-cart')}}" wire:navigate>Cart</a></li>
+                @else
                 <li><a href="{{route('myparticipants')}}" wire:navigate>Participants</a></li>
+                @endif
                 <li>Create</li>
             </ul>
         </div>
@@ -157,14 +167,20 @@
         </div>
         <div class="mt-4 flex justify-start gap-2">
             <button type="submit" class="btn btn-primary" wire:loading.attr="disabled">
-                <span wire:loading.remove wire:target="create">Create</span>
+                <span wire:loading.remove wire:target="create">
+                    @if($fromCart)
+                    Create & Continue Order
+                    @else
+                    Create
+                    @endif
+                </span>
                 <span wire:loading wire:target="create">
                     <span class="loading loading-spinner loading-xs"></span>
                     Creating...
                 </span>
-
             </button>
-            <button type="submit" class="btn btn-soft btn-primary" wire:click="createAnother"
+            @if(!$fromCart)
+            <button type="button" class="btn btn-soft btn-primary" wire:click="createAnother"
                 wire:loading.attr="disabled">
                 <span wire:loading.remove wire:target="createAnother">Create & Create Another</span>
                 <span wire:loading wire:target="createAnother">
@@ -172,7 +188,8 @@
                     Creating...
                 </span>
             </button>
-            <a href="{{route('myparticipants')}}" wire:navigate class="btn btn-error">Cancel</a>
+            @endif
+            <a href="{{$fromCart ? route('reg-cart') : route('myparticipants')}}" wire:navigate class="btn btn-error">Cancel</a>
         </div>
     </form>
 </div>

@@ -4,7 +4,7 @@
             <i class="fa-solid fa-magnifying-glass"></i>
             <input wire:model.live.debounce.300ms='search' type="search" class="grow" placeholder="Search" />
         </label>
-        <a href="#" wire:navigate class="btn btn-primary"><i class="fa fa-plus"></i> Add
+        <a href="{{route('registration')}}" wire:navigate class="btn btn-primary"><i class="fa fa-plus"></i> Add
             New</a>
     </div>
 

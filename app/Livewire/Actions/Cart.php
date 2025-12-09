@@ -36,6 +36,11 @@ class Cart extends Component
         $this->loadCartFromSession();
         $this->calculateTotals();
         $this->loadUserParticipants();
+
+        if (session()->has('cart_step')) {
+        $this->step = session()->get('cart_step');
+        session()->forget('cart_step'); 
+    }
     }
 
     public function loadCartFromSession()

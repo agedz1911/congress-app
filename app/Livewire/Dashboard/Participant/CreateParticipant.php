@@ -62,6 +62,7 @@ class CreateParticipant extends Component
     // public $participant_type = '';
 
     public $id_participant = '';
+    public $fromCart = false;
 
     public function mount()
     {
@@ -71,6 +72,7 @@ class CreateParticipant extends Component
             session()->flash('error', 'Please login to create participant.');
             return redirect()->route('login');
         }
+        $this->fromCart = session()->has('return_to_cart_step');
 
         $this->generateIdParticipant();
     }
@@ -80,7 +82,7 @@ class CreateParticipant extends Component
         $this->validate();
 
         try {
-            Participant::create([
+            $participant = Participant::create([
                 'id_participant' => $this->id_participant,
                 'user_id' => Auth::id(),
                 'first_name' => $this->first_name,
@@ -100,6 +102,14 @@ class CreateParticipant extends Component
                 'address' => $this->address,
                 'participant_type' => ['Participant'],
             ]);
+
+            if (session()->has('cart') && session()->has('return_to_cart_step')) {
+                session()->put('selected_participant_id', $participant->id);
+                session()->put('cart_step', 2);
+                session()->forget('return_to_cart_step');
+                session()->flash('success', 'Participant created successfully! Continue with your order.');
+                return $this->redirect(route('reg-cart'), navigate: true);
+            }
 
             session()->flash('success', 'Participant created successfully!');
             return $this->redirect(route('myparticipants'), navigate: true);
@@ -137,7 +147,6 @@ class CreateParticipant extends Component
             session()->flash('success', 'Participant created successfully! You can create another one.');
             // Reset form
             $this->resetForm();
-            
         } catch (\Exception $e) {
             session()->flash('error', 'Failed to create participant: ' . $e->getMessage());
         }
