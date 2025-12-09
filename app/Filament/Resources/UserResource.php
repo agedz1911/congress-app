@@ -26,12 +26,21 @@ class UserResource extends Resource
 
     public static function form(Form $form): Form
     {
+        $countries = countries();
         return $form
             ->schema([
                 Forms\Components\TextInput::make('name')
                     ->required(),
+                Forms\Components\TextInput::make('last_name')
+                    ->required(),
                 Forms\Components\TextInput::make('email')
                     ->email()
+                    ->required(),
+                Forms\Components\Select::make('country')
+                    ->options(collect($countries)->mapWithKeys(function ($country) {
+                        return [$country['name'] => $country['name']];
+                    })->all())
+                    ->searchable()
                     ->required(),
                 Forms\Components\DateTimePicker::make('email_verified_at'),
                 Forms\Components\TextInput::make('password')
@@ -58,7 +67,11 @@ class UserResource extends Resource
             ->columns([
                 Tables\Columns\TextColumn::make('name')
                     ->searchable(),
+                Tables\Columns\TextColumn::make('last_name')
+                    ->searchable(),
                 Tables\Columns\TextColumn::make('email')
+                    ->searchable(),
+                Tables\Columns\TextColumn::make('country')
                     ->searchable(),
                 Tables\Columns\TextColumn::make('email_verified_at')
                     ->dateTime()

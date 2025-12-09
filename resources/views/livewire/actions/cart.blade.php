@@ -19,7 +19,7 @@
             <div class="overflow-x-auto w-full max-w-4xl rounded-2xl ">
                 <table class="table">
                     <!-- head -->
-                    <thead class=" bg-slate-200 dark:bg-yellow-200">
+                    <thead class=" bg-slate-200 dark:bg-slate-700">
                         <tr>
                             <th style="width: 40%;">Category Product</th>
                             <th>Price</th>
@@ -267,26 +267,60 @@
             <div class="card-body">
                 <h2 class="card-title">Select Payment Method</h2>
                 <div class="w-full flex justify-between flex-col lg:flex-row py-5">
-                    <div class="form-control w-full">
-                        <label
-                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full cursor-pointer">
-                            <input type="radio" name="radio-4" class="radio radio-primary" checked="checked" />
-                            <span>Credit Card <i class="fa fa-credit-card"></i></span>
-                        </label>
-                    </div>
-                    <div class="form-control w-full">
-                        <label
-                            class="label p-4 hover:border hover:border-primary hover:rounded-xl w-full  cursor-pointer">
-                            <input type="radio" name="radio-4" class="radio radio-primary" />
-                            <span>Bank Transfer <i class="fa fa-money-bill-transfer"></i></span>
-                        </label>
-                    </div>
+                    <label class="cursor-pointer">
+                        <div class="flex items-center p-6 border-2 rounded-xl transition-all hover:border-primary hover:bg-base-200
+                        {{ $paymentMethod === 'bank_transfer' ? 'border-primary bg-base-200' : 'border-base-300' }}">
+                            <input type="radio" name="payment_method" value="bank_transfer"
+                                wire:model.live="paymentMethod" class="radio radio-primary" />
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa fa-building-columns text-2xl text-primary"></i>
+                                    <span class="font-semibold text-lg">Bank Transfer</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Transfer directly to our bank account</p>
+                            </div>
+                            @if($paymentMethod === 'bank_transfer')
+                            <i class="fa fa-check-circle text-primary text-xl"></i>
+                            @endif
+                        </div>
+                    </label>
+                    <label class="cursor-pointer">
+                        <div class="flex items-center p-6 border-2 rounded-xl transition-all hover:border-primary hover:bg-base-200
+                        {{ $paymentMethod === 'credit_card' ? 'border-primary bg-base-200' : 'border-base-300' }}">
+                            <input type="radio" name="payment_method" value="credit_card"
+                                wire:model.live="paymentMethod" class="radio radio-primary" />
+                            <div class="ml-4 flex-1">
+                                <div class="flex items-center gap-2">
+                                    <i class="fa fa-credit-card text-2xl text-primary"></i>
+                                    <span class="font-semibold text-lg">Credit Card</span>
+                                </div>
+                                <p class="text-sm text-gray-500 mt-1">Pay securely with your credit card</p>
+                            </div>
+                            @if($paymentMethod === 'credit_card')
+                            <i class="fa fa-check-circle text-primary text-xl"></i>
+                            @endif
+                        </div>
+                    </label>
                 </div>
+
+                @if($paymentMethod === 'bank_transfer')
+                <div class="alert alert-info mt-4">
+                    <i class="fa fa-info-circle"></i>
+                    <span>After placing your order, you will receive bank transfer instructions via email.</span>
+                </div>
+                @elseif($paymentMethod === 'credit_card')
+                <div class="alert alert-info mt-4">
+                    <i class="fa fa-info-circle"></i>
+                    <span>You will be redirected to our secure payment gateway to complete your payment.</span>
+                </div>
+                @endif
+
                 <div class="justify-between card-actions">
                     <button wire:click='backToParticipant' class="btn btn-error"><i
                             class="fa fa-angles-left text-xs"></i> Back to detail Participant</button>
-                    <button wire:click='continueToReview' class="btn btn-primary">Continue <i
-                            class="fa fa-angles-right text-xs"></i></button>
+                    <button wire:click='continueToReview' class="btn btn-primary" @if(!$paymentMethod) disabled @endif>
+                        Continue to Review <i class="fa fa-angles-right text-xs"></i>
+                    </button>
                 </div>
             </div>
         </div>
@@ -303,7 +337,7 @@
                 <div class="overflow-x-auto w-full max-w-4xl rounded-2xl ">
                     <table class="table">
                         <!-- head -->
-                        <thead class="bg-slate-200">
+                        <thead class="bg-slate-200 dark:bg-slate-700">
                             <tr>
                                 <th style="width: 40%;">Category Product</th>
                                 <th>Price</th>
@@ -312,22 +346,26 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- row 1 -->
+                            @foreach ($cartItems as $item)
+
                             <tr>
                                 <td>
                                     <div>
-                                        <p class="font-semibold">Specialist <br>
-                                            <span class="font-normal text-xs">Early Bird</span> <br>
-                                            <span class="font-normal text-xs">Symposium</span>
+                                        <p class="font-semibold">{{ $item['name'] }} <br>
+                                            <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ',
+                                                $item['price_type'])) }}</span> <br>
+                                            <span class="font-normal text-xs">satu lagi</span>
                                         </p>
                                     </div>
                                 </td>
-                                <td>1.000.000</td>
+                                <td>{{ $item['currency'] }} {{ number_format($item['price'], 0, ',', '.') }}</td>
                                 <td>
-                                    1
+                                    {{ $item['quantity'] }}
                                 </td>
-                                <td>1.000.000</td>
+                                <td>{{ $item['currency'] }} {{ number_format($item['price'] * $item['quantity'], 0, ',',
+                                    '.') }}</td>
                             </tr>
+                            @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -336,31 +374,68 @@
                     <h4 class="text-xl font-semibold mb-3">Order Summary</h4>
                     <div class="card w-96 max-w-xl card-md shadow-sm">
                         <div class="card-body">
-                            <div class="flex justify-between">
-                                <h2 class="card-title">Subtotal</h2>
-                                <h2 class="card-title">1.000.000</h2>
-                            </div>
+                            <h3 class="card-title text-xl mb-4">Order Summary</h3>
+                            <div class="space-y-3">
+                                <div class="flex justify-between text-base">
+                                    <span class="text-gray-600">Subtotal</span>
+                                    <span class="font-semibold">
+                                        {{ $cartItems ? $cartItems[array_key_first($cartItems)]['currency'] : '' }}
+                                        {{ number_format($subtotal, 0, ',', '.') }}
+                                    </span>
+                                </div>
 
-                            <div class="flex justify-between">
-                                <h2 class="card-title">Promo code</h2>
-                                <h2 class="card-title">Discount10</h2>
-                            </div>
-                            <div class="flex justify-between">
-                                <h2 class="card-title">Discount</h2>
-                                <h2 class="card-title">-100.000</h2>
-                            </div>
-                            <div class="flex justify-between mb-4">
-                                <h2 class="card-title">Total</h2>
-                                <h2 class="card-title text-success">1.000.000</h2>
-                            </div>
+                                @if($discount > 0)
+                                <div class="flex justify-between text-base text-success">
+                                    <span>Discount</span>
+                                    <span class="font-semibold">
+                                        - {{ $cartItems ? $cartItems[array_key_first($cartItems)]['currency'] : '' }}
+                                        {{ number_format($discount, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                                @if(session()->has('applied_coupon'))
+                                <div class="text-xs text-gray-500 flex items-center gap-1">
+                                    <i class="fa fa-tag"></i>
+                                    <span>Coupon: {{ session('applied_coupon')['code'] }}</span>
+                                </div>
+                                @endif
+                                @endif
 
+                                <div class="divider my-2"></div>
+
+                                <div class="flex justify-between text-lg font-bold">
+                                    <span>Total</span>
+                                    <span class="text-primary">
+                                        {{ $cartItems ? $cartItems[array_key_first($cartItems)]['currency'] : '' }}
+                                        {{ number_format($total, 0, ',', '.') }}
+                                    </span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div>
-                <h1 class="text-xl font-semibold">Selected Payment Method:</h1>
-                <h4 class="text-primary">Credit Card <i class="fa fa-credit-card"></i></h4>
+            <div class="card bg-base-100 shadow-sm">
+                <div class="card-body">
+                    <h3 class="card-title text-xl mb-4">
+                        <i class="fa fa-credit-card text-primary"></i>
+                        Payment Method
+                    </h3>
+                    <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg">
+                        @if($paymentMethod === 'bank_transfer')
+                        <i class="fa fa-building-columns text-2xl text-primary"></i>
+                        <div>
+                            <p class="font-semibold">Bank Transfer</p>
+                            <p class="text-sm text-gray-500">Transfer to our bank account</p>
+                        </div>
+                        @else
+                        <i class="fa fa-credit-card text-2xl text-primary"></i>
+                        <div>
+                            <p class="font-semibold">Credit Card</p>
+                            <p class="text-sm text-gray-500">Pay with credit card</p>
+                        </div>
+                        @endif
+                    </div>
+                </div>
             </div>
 
             <div class="card bg-base-100 mt-5 shadow-sm">
@@ -380,22 +455,36 @@
                         <h1 class="text-center text-lg mb-4">By clicking "I Agree" you agree and consent to our Terms
                             and Conditions.</h1>
                         <div class="form-control">
-                            <label class="label cursor-pointer gap-4">
-                                <input type="checkbox" class="checkbox checkbox-md" />
-                                <span class="label-text">I agree to the terms and conditions</span>
+                            <label
+                                class="label cursor-pointer justify-start gap-4 p-4 bg-warning/10 rounded-lg border-2 border-warning">
+                                <input type="checkbox" wire:model.live="agreeTerms" class="checkbox checkbox-warning" />
+                                <span class="label-text font-medium">
+                                    I agree to the terms and conditions and cancellation policy
+                                </span>
                             </label>
                         </div>
 
                         <div class="flex w-full max-w-xl justify-between mt-10 gap-4">
-                            <button wire:click='backToPaymentMethod' class="btn btn-error">
-                                <i class="fa fa-angles-left text-xs"></i>
-                                Back to Payment
+                            <button wire:click='backToPaymentMethod' class="btn btn-outline btn-error">
+                                <i class="fa fa-angles-left text-xs"></i> Back to Payment
                             </button>
-                            <button class="btn btn-primary">
-                                Submit Order
-                                <i class="fa fa-anles-right text-xs"></i>
+                            <button wire:click='submitOrder' class="btn btn-primary btn-block" @if(!$agreeTerms)
+                                disabled @endif wire:loading.attr="disabled">
+                                <span wire:loading.remove wire:target="submitOrder">
+                                    <i class="fa fa-check"></i> Submit Order
+                                </span>
+                                <span wire:loading wire:target="submitOrder">
+                                    <span class="loading loading-spinner loading-xs"></span>
+                                    Processing...
+                                </span>
                             </button>
                         </div>
+                        @if(!$agreeTerms)
+                        <div class="alert alert-warning mt-4">
+                            <i class="fa fa-exclamation-triangle text-sm"></i>
+                            <span class="text-xs">Please agree to terms to submit order</span>
+                        </div>
+                        @endif
                     </div>
                 </div>
             </div>

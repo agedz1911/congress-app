@@ -25,6 +25,10 @@ class Cart extends Component
     public $selectedParticipantId = null;
     public $hasParticipants = false;
 
+    public $paymentMethod = 'bank_transfer';
+    public $selectedParticipantDetails = null;
+    public $agreeTerms = false;
+
     public function mount()
     {
         $this->countries = countries();
@@ -38,9 +42,12 @@ class Cart extends Component
         $this->loadUserParticipants();
 
         if (session()->has('cart_step')) {
-        $this->step = session()->get('cart_step');
-        session()->forget('cart_step'); 
-    }
+            $this->step = session()->get('cart_step');
+            session()->forget('cart_step');
+        }
+        if (session()->has('payment_method')) {
+            $this->paymentMethod = session()->get('payment_method');
+        }
     }
 
     public function loadCartFromSession()
@@ -227,6 +234,14 @@ class Cart extends Component
         }
     }
 
+    public function loadSelectedParticipantDetails()
+    {
+        if ($this->selectedParticipantId) {
+            $this->selectedParticipantDetails = collect($this->participants)
+                ->firstWhere('id', $this->selectedParticipantId);
+        }
+    }
+
     public function backToRegistration()
     {
         return redirect()->route('registration');
@@ -288,8 +303,48 @@ class Cart extends Component
 
     public function continueToReview()
     {
+        if (!$this->paymentMethod) {
+            session()->flash('error', 'Please select a payment method.');
+            return;
+        }
 
+        session()->put('payment_method', $this->paymentMethod);
+
+        $this->loadSelectedParticipantDetails();
         $this->step = 4;
+    }
+
+    public function submitOrder()
+    {
+        if (!$this->agreeTerms) {
+            session()->flash('error', 'Please agree to the terms and conditions to continue.');
+            return;
+        }
+
+        if (empty($this->cartItems)) {
+            session()->flash('error', 'Your cart is empty.');
+            return;
+        }
+
+        if (!$this->selectedParticipantId) {
+            session()->flash('error', 'Please select a participant.');
+            return;
+        }
+
+        if (!$this->paymentMethod) {
+            session()->flash('error', 'Please select a payment method.');
+            return;
+        }
+
+        try {
+            session()->flash('success', 'Order submitted successfully!');
+
+            session()->forget(['cart', 'applied_coupon', 'selected_participant_id', 'payment_method']);
+
+            return redirect()->route('myregistrations');
+        } catch (\Exception  $e) {
+            session()->flash('error', 'Failed to submit order: ' . $e->getMessage());
+        }
     }
 
     public function render()
