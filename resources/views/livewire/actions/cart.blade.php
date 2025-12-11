@@ -260,64 +260,68 @@
     @endif
 
     @if ($step == 3)
-
-
     <section class="py-5 lg:py-10 flex flex-col items-center">
         <div class="card w-full max-w-3xl bg-base-100 card-lg shadow-sm">
             <div class="card-body">
-                <h2 class="card-title">Select Payment Method</h2>
-                <div class="w-full flex justify-between flex-col lg:flex-row py-5">
+                <h2 class="card-title text-2xl mb-4">Select Payment Method</h2>
+
+                <div class="w-full flex flex-col gap-4 py-5">
+                    {{-- Bank Transfer Option --}}
                     <label class="cursor-pointer">
                         <div class="flex items-center p-6 border-2 rounded-xl transition-all hover:border-primary hover:bg-base-200
-                        {{ $paymentMethod === 'bank_transfer' ? 'border-primary bg-base-200' : 'border-base-300' }}">
-                            <input type="radio" name="payment_method" value="bank_transfer"
+                        {{ $paymentMethod === 'Bank Transfer' ? 'border-primary bg-base-200' : 'border-base-300' }}">
+                            <input type="radio" name="payment_method" value="Bank Transfer"
                                 wire:model.live="paymentMethod" class="radio radio-primary" />
                             <div class="ml-4 flex-1">
                                 <div class="flex items-center gap-2">
-                                    <i class="fa fa-building-columns text-2xl text-primary"></i>
+                                    <i class="fa fa-building-columns text-2xl text-info"></i>
                                     <span class="font-semibold text-lg">Bank Transfer</span>
                                 </div>
                                 <p class="text-sm text-gray-500 mt-1">Transfer directly to our bank account</p>
                             </div>
-                            @if($paymentMethod === 'bank_transfer')
+                            @if($paymentMethod === 'Bank Transfer')
                             <i class="fa fa-check-circle text-primary text-xl"></i>
                             @endif
                         </div>
                     </label>
+
+                    {{-- Credit Card Option --}}
                     <label class="cursor-pointer">
                         <div class="flex items-center p-6 border-2 rounded-xl transition-all hover:border-primary hover:bg-base-200
-                        {{ $paymentMethod === 'credit_card' ? 'border-primary bg-base-200' : 'border-base-300' }}">
-                            <input type="radio" name="payment_method" value="credit_card"
+                        {{ $paymentMethod === 'Credit Card' ? 'border-primary bg-base-200' : 'border-base-300' }}">
+                            <input type="radio" name="payment_method" value="Credit Card"
                                 wire:model.live="paymentMethod" class="radio radio-primary" />
                             <div class="ml-4 flex-1">
                                 <div class="flex items-center gap-2">
-                                    <i class="fa fa-credit-card text-2xl text-primary"></i>
+                                    <i class="fa fa-credit-card text-2xl text-success"></i>
                                     <span class="font-semibold text-lg">Credit Card</span>
                                 </div>
                                 <p class="text-sm text-gray-500 mt-1">Pay securely with your credit card</p>
                             </div>
-                            @if($paymentMethod === 'credit_card')
+                            @if($paymentMethod === 'Credit Card')
                             <i class="fa fa-check-circle text-primary text-xl"></i>
                             @endif
                         </div>
                     </label>
                 </div>
 
-                @if($paymentMethod === 'bank_transfer')
+                {{-- Payment Method Details --}}
+                @if($paymentMethod === 'Bank Transfer')
                 <div class="alert alert-info mt-4">
                     <i class="fa fa-info-circle"></i>
                     <span>After placing your order, you will receive bank transfer instructions via email.</span>
                 </div>
-                @elseif($paymentMethod === 'credit_card')
+                @elseif($paymentMethod === 'Credit Card')
                 <div class="alert alert-info mt-4">
                     <i class="fa fa-info-circle"></i>
                     <span>You will be redirected to our secure payment gateway to complete your payment.</span>
                 </div>
                 @endif
 
-                <div class="justify-between card-actions">
-                    <button wire:click='backToParticipant' class="btn btn-error"><i
-                            class="fa fa-angles-left text-xs"></i> Back to detail Participant</button>
+                <div class="flex justify-between mt-6 pt-4 border-t">
+                    <button wire:click='backToParticipant' class="btn btn-error">
+                        <i class="fa fa-angles-left text-xs"></i> Back to Participant
+                    </button>
                     <button wire:click='continueToReview' class="btn btn-primary" @if(!$paymentMethod) disabled @endif>
                         Continue to Review <i class="fa fa-angles-right text-xs"></i>
                     </button>
@@ -326,6 +330,7 @@
         </div>
     </section>
     @endif
+
 
     @if ($step == 4)
 
@@ -421,14 +426,14 @@
                         Payment Method
                     </h3>
                     <div class="flex items-center gap-3 p-4 bg-base-200 rounded-lg">
-                        @if($paymentMethod === 'bank_transfer')
-                        <i class="fa fa-building-columns text-2xl text-primary"></i>
+                        @if($paymentMethod === 'Bank Transfer')
+                        <i class="fa fa-building-columns text-2xl text-info"></i>
                         <div>
                             <p class="font-semibold">Bank Transfer</p>
                             <p class="text-sm text-gray-500">Transfer to our bank account</p>
                         </div>
                         @else
-                        <i class="fa fa-credit-card text-2xl text-primary"></i>
+                        <i class="fa fa-credit-card text-2xl text-success"></i>
                         <div>
                             <p class="font-semibold">Credit Card</p>
                             <p class="text-sm text-gray-500">Pay with credit card</p>

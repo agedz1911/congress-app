@@ -22,6 +22,12 @@ class Order extends Model
         'status'
     ];
 
+    protected $casts = [
+        'total' => 'decimal:2',
+        'discount' => 'decimal:2',
+    ];
+
+
     public function participant(): BelongsTo
     {
         return $this->belongsTo(Participant::class);

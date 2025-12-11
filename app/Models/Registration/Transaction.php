@@ -21,6 +21,12 @@ class Transaction extends Model
         'kurs'
     ];
 
+    protected $casts = [
+        'payment_date' => 'datetime',
+        'amount' => 'decimal:2',
+        'kurs' => 'decimal:2',
+    ];
+
     public function order(): BelongsTo
     {
         return $this->belongsTo(Order::class, 'order_id');

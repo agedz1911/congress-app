@@ -2,9 +2,16 @@
 
 namespace App\Livewire\Actions;
 
+use App\Models\Currency;
 use App\Models\Manage\Coupon;
+use App\Models\Registration\Order;
+use App\Models\Registration\OrderItem;
 use App\Models\Registration\Participant;
+use App\Models\Registration\Product;
+use App\Models\Registration\Transaction;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -336,15 +343,153 @@ class Cart extends Component
             return;
         }
 
+        DB::beginTransaction();
+
         try {
+            $regCode = $this->generateRegistrationCode();
+
+            $appliedCoupon = session()->get('applied_coupon');
+            $couponCode = $appliedCoupon['code'] ?? null;
+
+            $participant = Participant::find($this->selectedParticipantId);
+
+            $currencyRate = $this->calculateKurs($participant);
+            $kursValue = $this->total * $currencyRate;
+
+            $order = Order::create([
+                'reg_code' => $regCode,
+                'participant_id' => $this->selectedParticipantId,
+                'total' => $this->total,
+                'discount' => $this->discount,
+                'coupon' => $couponCode,
+                'status' => 'New', // Default status
+            ]);
+
+            foreach ($this->cartItems as $item) {
+                OrderItem::create([
+                    'order_id' => $order->id,
+                    'product_id' => $item['product_id'],
+                    'quantity' => $item['quantity'],
+                    'unit_price' => $item['price'],
+                ]);
+
+                // Optional: Update product quota
+                $product = Product::find($item['product_id']);
+                if ($product && $product->quota !== null && $product->quota > 0) {
+                    $product->decrement('quota', $item['quantity']);
+                }
+            }
+
+            $transaction = Transaction::create([
+                'order_id' => $order->id,
+                'payment_method' => $this->paymentMethod, // Langsung dari property
+                'payment_date' => null, // Will be set when payment confirmed
+                'payment_status' => 'Unpaid', // Default status
+                'amount' => 0,
+                'kurs' => $kursValue,
+                'attachment' => null, // Will be uploaded by user for bank transfer
+            ]);
+
+            if ($couponCode) {
+                $coupon = Coupon::where('name', $couponCode)->first();
+                if ($coupon && $coupon->isQuotaAvailable()) {
+                    $coupon->increment('used_count'); // Increment used_count
+                }
+            }
+
+            // $this->sendOrderConfirmationEmail($order);
+            $this->clearCartAndSessions();
+            DB::commit();
+
             session()->flash('success', 'Order submitted successfully!');
 
-            session()->forget(['cart', 'applied_coupon', 'selected_participant_id', 'payment_method']);
+            // session()->forget(['cart', 'applied_coupon', 'selected_participant_id', 'payment_method']);
 
             return redirect()->route('myregistrations');
         } catch (\Exception  $e) {
+            DB::rollBack();
+
+            Log::error('Order submission failed: ' . $e->getMessage(), [
+                'user_id' => Auth::id(),
+                'participant_id' => $this->selectedParticipantId,
+                'cart_items' => $this->cartItems,
+                'trace' => $e->getTraceAsString()
+            ]);
+
             session()->flash('error', 'Failed to submit order: ' . $e->getMessage());
         }
+    }
+
+    protected function calculateKurs($participant)
+    {
+        $kursValue = 1;
+
+        if (!$participant) {
+            return $kursValue;
+        }
+
+        try {
+            $countryLower = strtolower(trim($participant->country));
+
+            // Query by label instead of region
+            if ($countryLower === 'indonesia') {
+                $currency = Currency::where('label', 'IDR')->first();
+            } else {
+                // For non-Indonesia, use USD
+                $currency = Currency::where('label', 'USD')->first();
+            }
+
+            if ($currency && $currency->kurs) {
+                $kursValue = (float) $currency->kurs;
+
+                // Log::info('Kurs calculated', [
+                //     'country' => $participant->country,
+                //     'currency_label' => $currency->label,
+                //     'kurs' => $kursValue
+                // ]);
+            }
+        } catch (\Exception $e) {
+            Log::error('calculateKurs error: ' . $e->getMessage());
+        }
+
+        return $kursValue;
+    }
+
+    protected function generateRegistrationCode()
+    {
+        do {
+            // Format: REG-YYYYMMDD-XXXXX
+            $regCode = 'REG-' . random_int(10000, 99999);
+        } while (Order::where('reg_code', $regCode)->exists());
+
+        return $regCode;
+    }
+
+    protected function clearCartAndSessions()
+    {
+        // Clear cart items
+        $this->cartItems = [];
+
+        // Clear all cart related sessions
+        session()->forget([
+            'cart',
+            'applied_coupon',
+            'selected_participant_id',
+            'payment_method',
+            'cart_step',
+            'return_to_cart_step'
+        ]);
+
+        // Reset component properties
+        $this->subtotal = 0;
+        $this->discount = 0;
+        $this->total = 0;
+        $this->promoCode = '';
+        $this->selectedParticipantId = null;
+        $this->selectedParticipantDetails = null;
+        $this->paymentMethod = 'Bank Transfer';
+        $this->agreeTerms = false;
+        $this->step = 1;
     }
 
     public function render()
