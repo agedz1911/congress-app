@@ -405,7 +405,8 @@ class Cart extends Component
 
             // session()->forget(['cart', 'applied_coupon', 'selected_participant_id', 'payment_method']);
 
-            return redirect()->route('myregistrations');
+            // return redirect()->route('myregistrations');
+            return redirect()->route('order.detail', ['regCode' => $regCode]);
         } catch (\Exception  $e) {
             DB::rollBack();
 

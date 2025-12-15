@@ -21,7 +21,7 @@
                 <flux:navlist.item icon="home" :href="route('dashboard')" :current="request()->routeIs('dashboard')" wire:navigate>{{ __('Dashboard') }}</flux:navlist.item>
                 <flux:navlist.item icon="users" :href="route('myparticipants')" :current="request()->routeIs('myparticipants') || request()->routeIs('createparticipants') || request()->routeIs('editparticipants')" wire:navigate>{{ __('Participants') }}</flux:navlist.item>
                 <flux:navlist.item icon="building-office-2" :href="route('mybookings')" :current="request()->routeIs('mybookings')" wire:navigate>{{ __('My Booking') }}</flux:navlist.item>
-                <flux:navlist.item icon="document-text" :href="route('myregistrations')" :current="request()->routeIs('myregistrations')" wire:navigate>{{ __('My Registration') }}</flux:navlist.item>
+                <flux:navlist.item icon="document-text" :href="route('myregistrations')" :current="request()->routeIs(['myregistrations', 'order.detail'])" wire:navigate>{{ __('My Registration') }}</flux:navlist.item>
             </flux:navlist.group>
         </flux:navlist>
 

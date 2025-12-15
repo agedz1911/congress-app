@@ -104,6 +104,9 @@
                     <td>
                         {{number_format($order->transaction->kurs, 0, ',', '.')}}
                     </td>
+                    <td>
+                        <a class="btn btn-primary btn-xs" wire:navigate href="{{route('order.detail', ['regCode' => $order->reg_code])}}">Detail</a>
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
