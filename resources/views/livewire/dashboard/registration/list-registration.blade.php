@@ -1,4 +1,7 @@
 <div>
+    <x-toast type="success" :message="session('success')" :duration="5000" />
+    <x-toast type="error" :message="session('error')" />
+    <x-toast type="info" :message="session('info')" />
     <div class="mb-3 gap-3 flex justify-end">
         <label class="input">
             <i class="fa-solid fa-magnifying-glass"></i>
@@ -12,7 +15,8 @@
         @forelse($orders as $order)
         <div class="relative">
             <!-- Ticket Card -->
-            <div class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg overflow-hidden border border-zinc-200 dark:border-zinc-700 hover:shadow-xl transition-shadow duration-300">
+            <div
+                class="bg-white dark:bg-zinc-800 rounded-lg shadow-lg overflow-hidden border border-zinc-200 dark:border-zinc-700 hover:shadow-xl transition-shadow duration-300">
 
                 <!-- Header Section dengan Gradient -->
                 <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-4 text-white relative">
@@ -44,8 +48,7 @@
 
                     <!-- Perforated Edge Effect -->
                     <div class="absolute -bottom-3 left-0 right-0 flex justify-between px-2">
-                        @for($i = 0; $i < 20; $i++)
-                            <div class="w-3 h-3 bg-zinc-100 dark:bg-zinc-900 rounded-full">
+                        @for($i = 0; $i < 20; $i++) <div class="w-3 h-3 bg-zinc-100 dark:bg-zinc-900 rounded-full">
                     </div>
                     @endfor
                 </div>
@@ -56,8 +59,10 @@
 
                 <!-- Participant Info -->
                 <div class="flex items-start gap-3 pb-4 border-b border-dashed border-zinc-300 dark:border-zinc-600">
-                    <div class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
-                        {{strtoupper(substr($order->participant->first_name, 0, 1))}}{{strtoupper(substr($order->participant->last_name, 0, 1))}}
+                    <div
+                        class="w-12 h-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-bold text-lg">
+                        {{strtoupper(substr($order->participant->first_name, 0,
+                        1))}}{{strtoupper(substr($order->participant->last_name, 0, 1))}}
                     </div>
                     <div class="flex-1">
                         <h4 class="font-bold text-lg text-zinc-800 dark:text-zinc-100">
@@ -71,12 +76,14 @@
 
                 <!-- Products Section with Registration Type -->
                 <div>
-                    <p class="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-2">
+                    <p
+                        class="text-xs font-semibold uppercase text-zinc-500 dark:text-zinc-400 mb-3 flex items-center gap-2">
                         <i class="fa fa-box"></i> Products & Registration Type
                     </p>
                     <div class="space-y-3">
                         @forelse($order->items as $item)
-                        <div class="bg-zinc-50 dark:bg-zinc-700/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-600">
+                        <div
+                            class="bg-zinc-50 dark:bg-zinc-700/50 rounded-lg p-4 border border-zinc-200 dark:border-zinc-600">
                             <!-- Product Name & Registration Type -->
                             <div class="flex flex-wrap items-center gap-2 mb-3">
                                 <div class="badge badge-info gap-1">
@@ -99,7 +106,9 @@
                                 </div>
                                 <div class="bg-white dark:bg-zinc-800 rounded p-2">
                                     <p class="text-xs text-zinc-500 dark:text-zinc-400">Unit Price</p>
-                                    <p class="font-semibold text-zinc-800 dark:text-zinc-100">Rp {{ number_format($item->unit_price, 0, ',', '.') }}</p>
+                                    <p class="font-semibold text-zinc-800 dark:text-zinc-100">{{Auth()->user()->country
+                                        != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($item->unit_price, 0, ',',
+                                        '.') }}</p>
                                 </div>
                             </div>
 
@@ -109,24 +118,28 @@
                                 <div class="flex items-center gap-2 text-xs text-zinc-600 dark:text-zinc-400">
                                     <i class="fa fa-info-circle"></i>
                                     <span class="font-medium">Registration Type:</span>
-                                    <span class="text-zinc-800 dark:text-zinc-100">{{ $item->product->regtype->name }}</span>
+                                    <span class="text-zinc-800 dark:text-zinc-100">{{ $item->product->regtype->name
+                                        }}</span>
                                 </div>
 
                                 <!-- Price Type Indicator (Early Bird, Regular, On-Site) -->
                                 @if($item->product->is_early_bird &&
                                 now()->between($item->product->early_bird_start, $item->product->early_bird_end))
-                                <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs">
+                                <div
+                                    class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 rounded text-xs">
                                     <i class="fa fa-bolt"></i>
                                     <span class="font-medium">Early Bird Price</span>
                                 </div>
                                 @elseif($item->product->is_regular &&
                                 now()->between($item->product->regular_start, $item->product->regular_end))
-                                <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
+                                <div
+                                    class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-700 dark:text-blue-300 rounded text-xs">
                                     <i class="fa fa-calendar-check"></i>
                                     <span class="font-medium">Regular Price</span>
                                 </div>
                                 @elseif($item->product->is_on_site)
-                                <div class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-xs">
+                                <div
+                                    class="mt-2 inline-flex items-center gap-1 px-2 py-1 bg-orange-100 dark:bg-orange-900/30 text-orange-700 dark:text-orange-300 rounded text-xs">
                                     <i class="fa fa-location-dot"></i>
                                     <span class="font-medium">On-Site Price</span>
                                 </div>
@@ -139,7 +152,8 @@
                                 <div class="flex justify-between items-center">
                                     <span class="text-sm font-medium text-zinc-600 dark:text-zinc-400">Subtotal</span>
                                     <span class="text-lg font-bold text-zinc-800 dark:text-zinc-100">
-                                        Rp {{ number_format($item->quantity * $item->unit_price, 0, ',', '.') }}
+                                        {{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{
+                                        number_format($item->quantity * $item->unit_price, 0, ',', '.') }}
                                     </span>
                                 </div>
                             </div>
@@ -169,17 +183,20 @@
                         <p class="text-xs text-zinc-600 dark:text-zinc-400 flex items-center gap-1">
                             <i class="fa fa-percent"></i> Discount
                         </p>
-                        <p class="font-semibold text-orange-600 dark:text-orange-400">Rp {{number_format($order->discount, 0, ',', '.')}}</p>
+                        <p class="font-semibold text-orange-600 dark:text-orange-400"> {{Auth()->user()->country !=
+                            'Indonesia' ? 'USD' : 'IDR'}} {{number_format($order->discount, 0, ',', '.')}}</p>
                     </div>
                     @endif
                 </div>
 
                 <!-- Total Amount -->
-                <div class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                <div
+                    class="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
                     <div class="flex justify-between items-center">
                         <div>
                             <p class="text-xs font-semibold uppercase text-zinc-600 dark:text-zinc-400">Total Amount</p>
-                            <p class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">Rp {{number_format($order->total, 0, ',', '.')}}</p>
+                            <p class="text-2xl font-bold text-zinc-800 dark:text-zinc-100">{{Auth()->user()->country !=
+                                'Indonesia' ? 'USD' : 'IDR'}} {{number_format($order->total, 0, ',', '.')}}</p>
                         </div>
                         <div class="text-4xl opacity-20">
                             <i class="fa fa-receipt"></i>
@@ -219,18 +236,21 @@
                 @if ($order->transaction->payment_date)
                 <div class="text-center pt-2">
                     <p class="text-xs text-zinc-600 dark:text-zinc-400">
-                        <i class="fa fa-calendar"></i> Paid on {{\Carbon\Carbon::parse($order->transaction->payment_date)->format('d F, Y')}}
+                        <i class="fa fa-calendar"></i> Paid on
+                        {{\Carbon\Carbon::parse($order->transaction->payment_date)->format('d F, Y')}}
                     </p>
                 </div>
                 @endif
 
                 <!-- Action Button -->
                 <div class="pt-2 flex flex-col gap-2">
-                    <a class="btn btn-primary w-full" wire:navigate href="{{route('order.detail', ['regCode' => $order->reg_code])}}">
+                    <a class="btn btn-primary w-full" wire:navigate
+                        href="{{route('order.detail', ['regCode' => $order->reg_code])}}">
                         <i class="fa fa-eye"></i> View Details
                     </a>
-                    @if ($order->transaction->payment_status != 'Paid')
-                    <a class="btn btn-primary btn-outline w-full" wire:navigate href="{{route('order.confirm', ['regCode' => $order->reg_code])}}">
+                    @if ($order->transaction->payment_status != 'Paid' && $order->transaction->payment_method == 'Bank Transfer')
+                    <a class="btn btn-primary btn-outline w-full" wire:navigate
+                        href="{{route('order.confirm', ['regCode' => $order->reg_code])}}">
                         <i class="fa fa-file-upload"></i> Payment Confirmation
                     </a>
                     @endif
@@ -238,13 +258,18 @@
             </div>
 
             <!-- Side Notches (Optional decorative element) -->
-            <div class="absolute top-1/2 -left-3 w-6 h-6 bg-zinc-100 dark:bg-zinc-900 rounded-full transform -translate-y-1/2"></div>
-            <div class="absolute top-1/2 -right-3 w-6 h-6 bg-zinc-100 dark:bg-zinc-900 rounded-full transform -translate-y-1/2"></div>
+            <div
+                class="absolute top-1/2 -left-3 w-6 h-6 bg-zinc-100 dark:bg-zinc-900 rounded-full transform -translate-y-1/2">
+            </div>
+            <div
+                class="absolute top-1/2 -right-3 w-6 h-6 bg-zinc-100 dark:bg-zinc-900 rounded-full transform -translate-y-1/2">
+            </div>
         </div>
     </div>
     @empty
     <div class="col-span-full">
-        <div class="text-center py-12 bg-zinc-50 dark:bg-zinc-800 rounded-lg border-2 border-dashed border-zinc-300 dark:border-zinc-600">
+        <div
+            class="text-center py-12 bg-zinc-50 dark:bg-zinc-800 rounded-lg border-2 border-dashed border-zinc-300 dark:border-zinc-600">
             <i class="fa fa-ticket text-6xl text-zinc-300 dark:text-zinc-600 mb-4"></i>
             <h3 class="text-xl font-semibold text-zinc-700 dark:text-zinc-300 mb-2">No registrations found</h3>
             <p class="text-zinc-500 dark:text-zinc-400 mb-4">Start by creating your first registration</p>

@@ -40,7 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard/registrations', App\Livewire\Dashboard\Registration\MyRegistration::class)->name('myregistrations');
     Route::get('dashboard/registrations/cart', Cart::class)->name('reg-cart');
     Route::get('dashboard/registrations/{regCode}/order', App\Livewire\Dashboard\Registration\OrderDetail::class)->name('order.detail');
-    Route::get('dashboard/registrations/{regCode}/confirm', RegistrationConfirmation::class)->name('order.confirm');
+    Route::get('dashboard/registrations/{regCode}/confirmation', RegistrationConfirmation::class)->name('order.confirm');
 });
 
 require __DIR__ . '/auth.php';

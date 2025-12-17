@@ -40,7 +40,7 @@
                     </div>
                     <div>
                         <label class="text-sm text-gray-500">Total Amount</label>
-                        <p class="font-bold text-lg">IDR {{ number_format($order->total, 0, ',', '.') }}</p>
+                        <p class="font-bold text-lg">{{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($order->total, 0, ',', '.') }}</p>
                     </div>
                     <div class="flex gap-2">
                         <div>
@@ -52,8 +52,8 @@
                         <div class="w-full max-w-60">
                             @if($order->transaction->attachment !=null )
                             <div class="">
-                                <label class="text-sm text-gray-500">Attachment</label>
-                                <img src="{{ asset('storage/' . $order->transaction->attachment)}}" alt="">
+                                <label class="text-sm text-gray-500"> Attachment</label>
+                                <img class="rounded-lg shadow-md" src="{{ asset('storage/' . $order->transaction->attachment)}}" alt="Payment Proof">
                             </div>
                             @endif
                         </div>
@@ -77,8 +77,8 @@
                             <tr>
                                 <td>{{ $item->product->name }}</td>
                                 <td>{{ $item->quantity }}</td>
-                                <td>IDR {{ number_format($item->unit_price, 0, ',', '.') }}</td>
-                                <td>IDR {{ number_format($item->unit_price * $item->quantity, 0, ',', '.') }}</td>
+                                <td>{{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($item->unit_price, 0, ',', '.') }}</td>
+                                <td>{{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($item->unit_price * $item->quantity, 0, ',', '.') }}</td>
                             </tr>
                             @endforeach
                         </tbody>
@@ -88,7 +88,7 @@
                 @if($order->discount > 0)
                 <div class="flex justify-end mt-4 text-success">
                     <span class="mr-4">Discount @if($order->coupon)({{ $order->coupon }})@endif:</span>
-                    <span class="font-bold">- IDR {{ number_format($order->discount, 0, ',', '.') }}</span>
+                    <span class="font-bold">- {{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($order->discount, 0, ',', '.') }}</span>
                 </div>
                 @endif
             </div>
@@ -119,7 +119,7 @@
                     </div>
                     <div>
                         <label class="font-semibold">Amount to Transfer</label>
-                        <p class="text-xl font-bold text-primary">IDR {{ number_format($order->total, 0, ',', '.') }}
+                        <p class="text-xl font-bold text-primary">{{Auth()->user()->country != 'Indonesia' ? 'USD' : 'IDR'}} {{ number_format($order->total, 0, ',', '.') }}
                         </p>
                     </div>
                 </div>
