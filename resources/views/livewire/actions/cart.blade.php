@@ -36,7 +36,7 @@
                                     <p class="font-semibold">{{ $item['name'] }}</p>
                                     <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ',
                                         $item['price_type'])) }}</span> <br>
-                                    <span class="font-normal text-xs">dsad</span>
+                                    <span class="font-normal text-xs">{{ $item['regtype_name'] ?? 'N/A' }}</span>
                                 </div>
                             </td>
                             <td>{{ $item['currency'] }} {{ number_format($item['price'], 0, ',', '.') }}</td>
@@ -359,7 +359,7 @@
                                         <p class="font-semibold">{{ $item['name'] }} <br>
                                             <span class="font-normal text-xs">{{ ucfirst(str_replace('_', ' ',
                                                 $item['price_type'])) }}</span> <br>
-                                            <span class="font-normal text-xs">satu lagi</span>
+                                            <span class="font-normal text-xs">{{ $item['regtype_name'] ?? 'N/A' }}</span>
                                         </p>
                                     </div>
                                 </td>

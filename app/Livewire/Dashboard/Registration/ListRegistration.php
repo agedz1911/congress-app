@@ -20,7 +20,7 @@ class ListRegistration extends Component
 
     public function render()
     {
-        $orders = Order::with(['participant', 'transaction', 'items.product'])
+        $orders = Order::with(['participant', 'transaction', 'items.product.regtype'])
             ->forUser(auth()->id())
             ->search($this->search)
             ->latest()

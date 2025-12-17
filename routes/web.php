@@ -1,6 +1,8 @@
 <?php
 
 use App\Livewire\Actions\Cart;
+use App\Livewire\Actions\Confirmation;
+use App\Livewire\Dashboard\Registration\Confirmation as RegistrationConfirmation;
 use App\Livewire\Settings\Appearance;
 use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', Homepage::class)->name('home');
 Route::get('/registration', Registration::class)->name('registration');
+Route::get('/confirmation', Confirmation::class)->name('confirmation');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
@@ -37,6 +40,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('dashboard/registrations', App\Livewire\Dashboard\Registration\MyRegistration::class)->name('myregistrations');
     Route::get('dashboard/registrations/cart', Cart::class)->name('reg-cart');
     Route::get('dashboard/registrations/{regCode}/order', App\Livewire\Dashboard\Registration\OrderDetail::class)->name('order.detail');
+    Route::get('dashboard/registrations/{regCode}/confirm', RegistrationConfirmation::class)->name('order.confirm');
 });
 
 require __DIR__ . '/auth.php';

@@ -29,6 +29,7 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Table;
@@ -155,6 +156,7 @@ class OrderResource extends Resource
                     ->label('Total Kurs')
                     ->numeric(decimalPlaces: 0)
                     ->sortable(),
+                ImageColumn::make('transaction.attachment'),
                 TextColumn::make('created_at')
                     ->date()
                     ->sortable()

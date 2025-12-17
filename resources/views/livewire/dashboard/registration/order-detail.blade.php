@@ -1,5 +1,12 @@
-<div class="container mx-auto px-4 py-8">
-    <div class="max-w-4xl mx-auto">
+<div class="">
+    <div class="">
+        <div class="breadcrumbs text-sm text-zinc-700 dark:text-zinc-50">
+            <ul>
+                <li><a href="{{route('dashboard')}}" wire:navigate>Dashboard</a></li>
+                <li><a href="{{route('myregistrations')}}" wire:navigate>MyRegistration</a></li>
+                <li>View</li>
+            </ul>
+        </div>
 
         {{-- Order Summary Card --}}
         <div class="card bg-base-100 shadow-xl mb-6">
@@ -35,10 +42,21 @@
                         <label class="text-sm text-gray-500">Total Amount</label>
                         <p class="font-bold text-lg">IDR {{ number_format($order->total, 0, ',', '.') }}</p>
                     </div>
-                    <div>
-                        <label class="text-sm text-gray-500">Payment Method</label>
-                        <p class="font-semibold">{{ ucwords(str_replace('_', ' ', $order->transaction->payment_method))
-                            }}</p>
+                    <div class="flex gap-2">
+                        <div>
+                            <label class="text-sm text-gray-500">Payment Method</label>
+                            <p class="font-semibold">{{ ucwords(str_replace('_', ' ',
+                                $order->transaction->payment_method))
+                                }}</p>
+                        </div>
+                        <div class="w-full max-w-60">
+                            @if($order->transaction->attachment !=null )
+                            <div class="">
+                                <label class="text-sm text-gray-500">Attachment</label>
+                                <img src="{{ asset('storage/' . $order->transaction->attachment)}}" alt="">
+                            </div>
+                            @endif
+                        </div>
                     </div>
                 </div>
 
@@ -142,11 +160,12 @@
         </div>
 
         <div class="flex justify-center gap-4 mt-8">
-            <a href="{{ route('myregistrations') }}" class="btn btn-outline">Back to Dashboard</a>
+            <a href="{{ route('myregistrations') }}" wire:navigate class="btn btn-outline">Back to Dashboard</a>
             <button onclick="window.print()" class="btn btn-primary">
                 <i class="fa fa-print"></i> Print Order
             </button>
-            <button class="btn btn-ghost"><i class="fa fa-upload"></i> Payment Confirmation</button>
+            <a href="{{route('order.confirm', ['regCode' => $order->reg_code])}}" wire:navigate class="btn btn-ghost"><i
+                    class="fa fa-file-upload"></i> Payment Confirmation</a>
         </div>
     </div>
 </div>

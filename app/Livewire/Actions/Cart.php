@@ -8,6 +8,7 @@ use App\Models\Registration\Order;
 use App\Models\Registration\OrderItem;
 use App\Models\Registration\Participant;
 use App\Models\Registration\Product;
+use App\Models\Registration\RegistrationType;
 use App\Models\Registration\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -61,6 +62,9 @@ class Cart extends Component
     {
         $this->cartItems = session()->get('cart', []);
 
+        $regtypeIds = collect($this->cartItems)->pluck('regtype_id')->unique()->filter();
+        $regtypes = RegistrationType::whereIn('id', $regtypeIds)->get()->keyBy('id');
+
         // Migrate old cart structure to new one
         foreach ($this->cartItems as $key => $item) {
             if (isset($item['price_idr'])) {
@@ -78,6 +82,11 @@ class Cart extends Component
                     'price_type' => $priceType,
                     'quantity' => $item['quantity'] ?? 1,
                 ];
+            }
+            if (isset($item['regtype_id']) && isset($regtypes[$item['regtype_id']])) {
+                $this->cartItems[$key]['regtype_name'] = $regtypes[$item['regtype_id']]->name;
+            } else {
+                $this->cartItems[$key]['regtype_name'] = 'N/A';
             }
         }
 
