@@ -15,23 +15,30 @@ use Livewire\WithFileUploads;
 class Confirmation extends Component
 {
     use WithFileUploads;
-    public $regCode;
-    public $order;
 
+    public $regCode;
+    public $orderId;
     public $payment_date;
     public $amount;
     public $attachment;
-
     public $existingAttachment;
     public $isEditing = false;
 
-    public $currencyRate = 1;
-    public $currencyLabel = 'IDR';
+    // Order data (primitives only)
+    public $orderRegCode;
+    public $orderStatus;
+    public $orderTotal;
+    public $orderDiscount;
+    public $participantName;
+    public $participantCountry;
+    public $participantEmail;
+    public $paymentMethod;
+    public $orderItems = [];
 
     protected $rules = [
         'payment_date' => 'required|date|before_or_equal:today',
         'amount' => 'required|numeric|min:0',
-        'attachment' => 'required|image|max:2048', // Max 2MB
+        'attachment' => 'required|image|max:2048',
     ];
 
     protected $messages = [
@@ -48,69 +55,48 @@ class Confirmation extends Component
 
     public function mount($regCode)
     {
-        // Load order dengan relationships
-        $this->order = Order::with(['participant', 'items.product', 'transaction'])
+        // Load order
+        $order = Order::with(['participant', 'items.product', 'transaction'])
             ->where('reg_code', $regCode)
             ->forUser(Auth::id())
             ->firstOrFail();
 
         // Check if transaction exists
-        if (!$this->order->transaction) {
+        if (!$order->transaction) {
             session()->flash('error', 'Transaction not found for this order.');
             return redirect()->route('myregistrations');
         }
 
-        // Get currency rate based on participant country
-        $this->setCurrencyRate();
+        // Store order ID for later use
+        $this->orderId = $order->id;
+        $this->orderRegCode = $order->reg_code;
+        $this->orderStatus = $order->status;
+        $this->orderTotal = $order->total;
+        $this->orderDiscount = $order->discount;
+        $this->participantName = $order->participant->first_name . ' ' . $order->participant->last_name;
+        $this->participantEmail = $order->participant->email;
+        $this->participantCountry = $order->participant->country;
+        $this->paymentMethod = $order->transaction->payment_method;
+
+        // Store order items
+        $this->orderItems = $order->items->map(function ($item) {
+            return [
+                'product_name' => $item->product->name,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->unit_price,
+                'total_price' => $item->unit_price * $item->quantity
+            ];
+        })->toArray();
 
         // Load existing data if already submitted
-        if ($this->order->transaction->payment_date) {
+        if ($order->transaction->payment_date) {
             $this->isEditing = true;
-            $this->payment_date = $this->order->transaction->payment_date->format('Y-m-d');
-            $this->amount = $this->order->transaction->amount;
-            $this->existingAttachment = $this->order->transaction->attachment;
+            $this->payment_date = $order->transaction->payment_date->format('Y-m-d');
+            $this->amount = $order->transaction->amount;
+            $this->existingAttachment = $order->transaction->attachment;
         } else {
-            // Pre-fill amount with kurs value
-            $this->amount = $this->order->transaction->kurs;
-        }
-    }
-
-    protected function setCurrencyRate()
-    {
-        $countryLower = strtolower(trim($this->order->participant->country ?? ''));
-
-        try {
-            if ($countryLower === 'indonesia') {
-                $currency = Currency::where('label', 'IDR')->first();
-            } else {
-                $currency = Currency::where('label', 'USD')->first();
-            }
-
-            if ($currency && $currency->kurs) {
-                $this->currencyRate = (float) $currency->kurs;
-                $this->currencyLabel = $currency->label;
-            } else {
-                // Fallback to default
-                $this->currencyRate = $countryLower === 'indonesia' ? 1 : 17000;
-                $this->currencyLabel = $countryLower === 'indonesia' ? 'IDR' : 'USD';
-            }
-        } catch (\Exception $e) {
-            // Fallback on error
-            $this->currencyRate = $countryLower === 'indonesia' ? 1 : 17000;
-            $this->currencyLabel = $countryLower === 'indonesia' ? 'IDR' : 'USD';
-        }
-    }
-
-    public function getFormattedAmount()
-    {
-        $kurs = $this->order->transaction->kurs;
-
-        if ($this->currencyLabel === 'IDR') {
-            return 'Rp ' . number_format($kurs, 0, ',', '.');
-        } else {
-            // Convert from IDR to USD
-            $amountInUSD = $kurs / $this->currencyRate;
-            return '$ ' . number_format($amountInUSD, 0);
+            // Pre-fill amount dengan total order
+            $this->amount = $order->total;
         }
     }
 
@@ -124,10 +110,17 @@ class Confirmation extends Component
         // Validate form
         $this->validate();
 
+        // Validasi amount harus sama dengan total order
+        if ((float)$this->amount !== (float)$this->orderTotal) {
+            session()->flash('error', 'Amount paid must match the order total. Expected: Rp ' . number_format($this->orderTotal, 0, ',', '.'));
+            return;
+        }
+
         DB::beginTransaction();
 
         try {
-            $transaction = $this->order->transaction;
+            $order = Order::findOrFail($this->orderId);
+            $transaction = $order->transaction;
 
             // Upload attachment
             $attachmentPath = null;
@@ -138,27 +131,27 @@ class Confirmation extends Component
                 }
 
                 // Generate unique filename
-                $originalName = pathinfo($this->attachment->getClientOriginalName(), PATHINFO_FILENAME);
                 $extension = $this->attachment->getClientOriginalExtension();
-                $filename = $this->order->reg_code . '_' . time() . '.' . $extension;
+                $filename = $order->reg_code . '_' . time() . '.' . $extension;
 
-                // Store new attachment in Payment_Receipt folder
+                // Store new attachment
                 $attachmentPath = $this->attachment->storeAs('Payment_Receipt', $filename, 'public');
             } elseif ($this->existingAttachment) {
                 // Keep existing attachment if no new file uploaded
                 $attachmentPath = $this->existingAttachment;
             }
 
-            // Update transaction
+            // Update transaction dengan amount yang sudah disesuaikan
             $transaction->update([
                 'payment_date' => $this->payment_date,
                 'amount' => $this->amount,
                 'attachment' => $attachmentPath,
-                'payment_status' => 'Unpaid', // Tetap Unpaid sampai admin verify
+                'payment_status' => 'UnPaid', // Status Processing sampai admin verify
+                // kurs tetap tersimpan dari sebelumnya
             ]);
 
             // Update order status to Processing
-            $this->order->update([
+            $order->update([
                 'status' => 'Processing',
             ]);
 
@@ -169,7 +162,6 @@ class Confirmation extends Component
             return redirect()->route('myregistrations');
         } catch (\Exception $e) {
             DB::rollBack();
-
             session()->flash('error', 'Failed to submit payment confirmation: ' . $e->getMessage());
         }
     }

@@ -63,6 +63,7 @@ class CreateParticipant extends Component
 
     public $id_participant = '';
     public $fromCart = false;
+    public $hasUserData = false;
 
     public function mount()
     {
@@ -75,6 +76,66 @@ class CreateParticipant extends Component
         $this->fromCart = session()->has('return_to_cart_step');
 
         $this->generateIdParticipant();
+        $this->checkUserData();
+    }
+
+    public function checkUserData()
+    {
+        $user = Auth::user();
+
+        // Check apakah user memiliki data yang bisa di-fill
+        if ($user->name || $user->last_name || $user->email || $user->phone || $user->country) {
+            $this->hasUserData = true;
+        }
+    }
+
+    public function fillFromUserData()
+    {
+        $user = Auth::user();
+
+        try {
+            // Pisahkan first name dan last name dari user name
+            $this->first_name = $user->name ?? '';
+            $this->last_name = $user->last_name ?? '';
+
+            // Fill email
+            $this->email = $user->email ?? '';
+
+            // Fill phone number
+            $this->phone_number = $user->phone ?? '';
+
+            // Fill country
+            if ($user->country) {
+                $this->country = $user->country;
+            }
+
+            // Fill province
+            if ($user->province) {
+                $this->province = $user->province;
+            }
+
+            // Fill city
+            if ($user->city) {
+                $this->city = $user->city;
+            }
+
+            // Fill postal code
+            if ($user->postal_code) {
+                $this->postal_code = $user->postal_code;
+            }
+
+            // Fill address
+            if ($user->address) {
+                $this->address = $user->address;
+            }
+
+            // Set name on certificate dengan format yang umum
+            $this->name_on_certificate = trim($user->name) ?? '';
+
+            session()->flash('success', 'Data filled from your profile! Please complete remaining fields.');
+        } catch (\Exception $e) {
+            session()->flash('error', 'Failed to fill data from profile: ' . $e->getMessage());
+        }
     }
 
     public function create()
@@ -175,7 +236,6 @@ class CreateParticipant extends Component
             'city',
             'postal_code',
             'address',
-            'participant_type',
         ]);
 
         $this->resetValidation();
