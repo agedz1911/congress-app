@@ -41,12 +41,12 @@
 
 
     <li>
-        <a href="/registration" wire:navigate
+        <a href="{{route('registration')}}" wire:navigate
             class="{{ request()->is('registration') ? 'text-amber-400' : 'text-white' }} hover:text-amber-500 hover:underline">Registration
         </a>
     </li>
     <li>
-        <a href="#" wire:navigate
+        <a href="{{route('accommodation')}}" wire:navigate
             class="{{ request()->is('accommodation') ? 'text-amber-400' : 'text-white' }} hover:text-amber-500 hover:underline">Accommodation
         </a>
     </li>
