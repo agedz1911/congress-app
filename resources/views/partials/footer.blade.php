@@ -3,7 +3,7 @@
     <div class="relative">
         <div class="flex flex-col items-center w-full max-w-4xl m-auto">
             <div class="flex text-start w-fit relative">
-                <img src="assets/images/logo/icon.png" alt="Icon"
+                <img src="/assets/images/logo/icon.png" alt="Icon"
                     class="absolute lg:right-10 right-10 -top-14 w-26 lg:w-28">
                 <h1 class="text-xl lg:text-2xl text-[#FFCD03] uppercase font-bold">Indonesian Burn & <br> wound
                     care meeting

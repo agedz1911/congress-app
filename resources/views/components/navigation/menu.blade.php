@@ -47,7 +47,7 @@
     </li>
     <li>
         <a href="{{route('accommodation')}}" wire:navigate
-            class="{{ request()->is('accommodation') ? 'text-amber-400' : 'text-white' }} hover:text-amber-500 hover:underline">Accommodation
+            class="{{ request()->is('accommodation') || request()->is('accommodation/*') ? 'text-amber-400' : 'text-white' }} hover:text-amber-500 hover:underline">Accommodation
         </a>
     </li>
     <li>

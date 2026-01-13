@@ -8,6 +8,7 @@ use App\Livewire\Settings\Password;
 use App\Livewire\Settings\Profile;
 use App\Livewire\Website\Accommodation;
 use App\Livewire\Website\Homepage;
+use App\Livewire\Website\HotelRoom;
 use App\Livewire\Website\Registration;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,7 @@ Route::get('/', Homepage::class)->name('home');
 Route::get('/registration', Registration::class)->name('registration');
 Route::get('/confirmation', Confirmation::class)->name('confirmation');
 Route::get('/accommodation', Accommodation::class)->name('accommodation');
+Route::get('/accommodation/{id}/hotel', HotelRoom::class)->name('hotel.room');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])
