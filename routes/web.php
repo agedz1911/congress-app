@@ -1,6 +1,7 @@
 <?php
 
 use App\Livewire\Actions\Cart;
+use App\Livewire\Actions\CheckoutHotel;
 use App\Livewire\Actions\Confirmation;
 use App\Livewire\Dashboard\Registration\Confirmation as RegistrationConfirmation;
 use App\Livewire\Settings\Appearance;
@@ -21,6 +22,7 @@ Route::get('/registration', Registration::class)->name('registration');
 Route::get('/confirmation', Confirmation::class)->name('confirmation');
 Route::get('/accommodation', Accommodation::class)->name('accommodation');
 Route::get('/accommodation/{id}/hotel', HotelRoom::class)->name('hotel.room');
+Route::get('/accommodation/checkout', CheckoutHotel::class)->name('checkout-hotel');
 
 Route::view('dashboard', 'dashboard')
     ->middleware(['auth', 'verified'])

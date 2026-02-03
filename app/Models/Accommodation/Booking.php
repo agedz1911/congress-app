@@ -28,7 +28,26 @@ class Booking extends Model
 
     public function scopeSearch($query, $value)
     {
-        $query->where(['hotel_id'], 'like', "%{$value}%");
+        if (empty($value)) {
+            return $query;
+        }
+        return $query->where(function ($query) use ($value) {
+            $query->where('booking_code', 'like', '%' . $value . '%')
+                ->orWhere('status', 'like', '%' . $value . '%')
+                ->orWhereHas('participant', function ($q) use ($value) {
+                    $q->where('first_name', 'like', '%' . $value . '%')
+                        ->orWhere('last_name', 'like', '%' . $value . '%')
+                        ->orWhere('country', 'like', '%' . $value . '%');
+                });
+        });
+        // $query->where(['hotel_id'], 'like', "%{$value}%");
+    }
+
+    public function scopeForUser($query, $userId)
+    {
+        return $query->whereHas('participant', function ($q) use ($userId) {
+            $q->where('user_id', $userId);
+        });
     }
 
     public function hotel()

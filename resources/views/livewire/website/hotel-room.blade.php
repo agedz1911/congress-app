@@ -18,6 +18,59 @@
             <li>Hotel</li>
         </ul>
     </div>
+
+    @if(session()->has('hotel_cart') && count(session('hotel_cart')) > 0)
+    <div class="fixed center-0 right-0 p-4 z-50">
+        <div class="bg-white rounded-lg shadow-xl p-4 max-w-md">
+            <div class="flex justify-between items-center mb-3">
+                <h3 class="font-bold text-lg">
+                    <i class="fa-solid fa-shopping-cart mr-2"></i>
+                    Your Cart
+                </h3>
+                <span class="badge badge-primary">{{$cartCount}} items</span>
+            </div>
+
+            @php
+            $cart = session('hotel_cart');
+            @endphp
+
+            @foreach($cart as $key => $item)
+            <div class="border-b py-2 last:border-0">
+                <div class="flex justify-between">
+                    <div>
+                        <p class="font-semibold">{{$item['hotel_name']}}</p>
+                        <p class="text-sm text-gray-600">{{$item['room_type']}}</p>
+                        <p class="text-sm text-gray-500">{{$item['total_night']}} night(s)</p>
+                    </div>
+                    <div class="text-right">
+                        <p class="font-bold text-primary">
+                            {{$item['currency']}} {{number_format($item['subtotal'])}}
+                        </p>
+                        <button wire:click="removeFromCart({{$key}})" class="text-xs text-red-500 hover:text-red-700">
+                            <i class="fa-solid fa-trash"></i> Remove
+                        </button>
+                    </div>
+                </div>
+            </div>
+            @endforeach
+
+            <div class="mt-3 pt-3 border-t">
+                <div class="flex justify-between items-center">
+                    <span class="font-bold">Total:</span>
+                    <span class="font-bold text-xl text-primary">
+                        {{$cartCurrency}} {{number_format($cartTotal)}}
+                    </span>
+                </div>
+                <a href="{{route('checkout-hotel')}}" class="btn btn-primary w-full mt-3">
+                    <i class="fa-solid fa-credit-card mr-2"></i>
+                    Proceed to Checkout
+                </a>
+            </div>
+        </div>
+    </div>
+    @endif
+
+
     <section class="pt-10 pb-24 px-2 lg:px-5 ">
         <div class="bg-base-100">
             <div class="flex flex-col md:flex-row gap-1">
@@ -76,7 +129,11 @@
                             {!! str($room->description)->markdown()->sanitizeHtml() !!}
                         </div>
                         <div class="card-actions justify-end">
-                            <button class="btn btn-primary">Book Room</button>
+                            @auth
+                            <button wire:click='addToCart({{$room->id}})' class="btn btn-primary">Book Room</button>
+                            @else
+                            <a href="{{route('login')}}" wire:navigate class="btn btn-warning">Login</a>
+                            @endauth
                         </div>
                     </div>
                 </div>
